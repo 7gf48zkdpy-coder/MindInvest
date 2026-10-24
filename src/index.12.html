@@ -1,0 +1,118 @@
+dit:'<rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h4"/>',stat:'<path d="M5 20V10M12 20V4M19 20v-7"/>'};
+function MC(id){return MCOL[id]||['#4FD1C5','#6C8CFF']}
+function svgI(p){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+p+'</svg>'}
+function cvars(id){var c=MC(id);return '--c1:'+c[0]+';--c2:'+c[1]}
+function mico(id,cls){return '<span class="ico'+(cls?' '+cls:'')+'" style="'+cvars(id)+'">'+svgI(MICO[id]||MICO.m01)+'</span>'}
+function tico(k,c1,c2,cls){return '<span class="ico'+(cls?' '+cls:'')+'" style="--c1:'+c1+';--c2:'+c2+'">'+svgI(TICO[k])+'</span>'}
+function liveSection(){var lm=COURSES.filter(function(m){return m.live&&m.lessons.length});if(!lm.length)return '';
+  return lm.map(function(m){return '<section class="sect"><div class="sect-t"><h2>'+esc(m.title)+'</h2><span class="note">Chaque semaine</span></div><div class="grp">'+m.lessons.slice().reverse().map(function(l){var ok=S.passed[l.id];return '<button class="mrow" data-lesson="'+l.id+'">'+mico(m.id,'sm')+'<span class="grow"><span class="t">'+esc(l.title)+'</span><span class="s">'+(l.added?'Publié le '+frDate(l.added)+' · ':'')+l.quiz.length+' questions</span></span>'+(ok?'<span class="okb">✓</span>':freshTag(l))+'</button>'}).join('')+'</div></section>'}).join('')}
+function lessonBadge(id){var qz=S.quiz[id]||{};return S.passed[id]?'<span class="badge acc">Validée</span>':(!S.admin&&qz.until>now()?'<span class="badge">Pause</span>':'<span class="badge">À faire</span>')}
+function loadingScreen(t){return '<div class="screen"><div class="pg-h"><div><h1>'+t+'</h1></div></div><div class="card"><div class="note">'+(coursesState==='err'?'Les cours n’ont pas pu être chargés. Recharge la page.':'Chargement des cours…')+'</div></div></div>'}
+function continueCard(){var nextL=LORDER.filter(function(id){return !S.passed[id]})[0];
+  if(!nextL)return '<div class="empty">'+mico('m10','sm')+'<div><b>Programme terminé</b><div class="note">Les '+LORDER.length+' leçons sont validées. Bravo !</div></div></div>';
+  var l=LX[nextL],ms=modStats(l.mod);
+  return '<button class="hero2" data-lesson="'+nextL+'" style="'+cvars(l.mod.id)+'"><span class="bgi">'+svgI(MICO[l.mod.id]||MICO.m01)+'</span><span class="k">Module '+l.mod.num+' · leçon '+(l.ix+1)+' sur '+ms.n+'</span><span class="ttl">'+esc(l.title)+'</span><span class="ft">'+esc(l.mod.title)+' · '+(l.min||8)+' min</span><span class="hb"><i style="width:'+(ms.d/ms.n*100)+'%"></i></span><span class="pl">'+(ms.d||l.ix?'Continuer':'Commencer')+' ›</span></button>'}
+function recentRows(n){var rl=recentLessons(n);if(!rl.length)return '';
+  return '<section class="sect"><div class="sect-t"><h2>Nouveau dans les cours</h2></div><div class="grp">'+rl.map(function(l){return '<button class="mrow" data-lesson="'+l.id+'">'+mico(l.mod.id,'sm')+'<span class="grow"><span class="t">'+esc(l.title)+'</span><span class="s">'+esc(l.chg||(l.added?'Nouveau cours':'Chiffres mis à jour'))+'</span></span>'+freshTag(l)+'</button>'}).join('')+'</div></section>'}
+function screenHome(){
+  if(coursesState!=='ok')return loadingScreen('Bonjour');
+  var d=new Date(),days=['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'],months=['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+  var hr=d.getHours(),hello=hr<5||hr>=18?'Bonsoir':'Bonjour',done=LORDER.filter(function(id){return S.passed[id]}).length,tot=LORDER.length||1,sk=streakNow(),due=srsDue().length;
+  var h='<div class="screen"><div class="pg-h"><div><div class="sub">'+days[d.getDay()]+' '+d.getDate()+' '+months[d.getMonth()]+'</div><h1>'+hello+'</h1></div>'+ring(done/tot,58,6,'<span style="font-size:13px">'+Math.round(done/tot*100)+'%</span>')+'</div>'+
+   '<div class="kpis"><div class="kpi"><span>Rang</span><b>'+esc(RANKS[S.rank-1])+'</b><small>'+S.rank+' sur 7</small></div><div class="kpi"><span>Leçons</span><b class="num">'+done+'</b><small>sur '+tot+'</small></div><div class="kpi"><span>Série</span><b class="num">'+sk+'</b><small>jour'+(sk>1?'s':'')+'</small></div></div>'+goalCard()+
+   '<section class="sect"><div class="sect-t"><h2>Reprendre</h2><button class="lnk" data-go="apprendre">Tous les cours</button></div>'+continueCard()+'</section>';
+  var today=[];
+  if(due)today.push('<button class="mrow" data-srs="1">'+tico('srs','#F59E0B','#EF4444','sm')+'<span class="grow"><span class="t">Révision du jour</span><span class="s">'+Math.min(due,10)+' question'+(due>1?'s':'')+' ratée'+(due>1?'s':'')+' à revoir</span></span><span class="chev">›</span></button>');
+  var fl=nqBlock(true);
+  if(today.length||fl)h+='<section class="sect"><div class="sect-t"><h2>Aujourd’hui</h2></div>'+(today.length?'<div class="grp">'+today.join('')+'</div>':'')+fl+'</section>';
+  h+=recentRows(3);
+  if(NEWSDATA&&NEWSDATA.items&&NEWSDATA.items.length)h+='<section class="sect"><div class="sect-t"><h2>À la une</h2><button class="lnk" data-go="actus">Toutes les actus</button></div><div class="nlist">'+NEWSDATA.items.slice(0,3).map(function(n){return '<button class="ncard" data-news="'+n.id+'"><span class="k">'+esc(n.cat)+' · '+ago(n.date)+'</span><span class="t">'+esc(n.title)+'</span></button>'}).join('')+'</div></section>';
+  return h+'</div>'}
+function screenApprendre(){
+  if(coursesState!=='ok')return loadingScreen('Cours');
+  if(!arank)arank=Math.min(7,S.rank);
+  var total=LORDER.length,passedN=LORDER.filter(function(id){return S.passed[id]}).length;
+  var ranks=RANKS.map(function(r,i){var ids=rankLessons(i+1),d=ids.filter(function(id){return S.passed[id]}).length;
+    return '<button data-arank="'+(i+1)+'" aria-pressed="'+(arank===i+1)+'"><b>'+(i+1)+(ids.length&&d===ids.length?' ✓':'')+'</b><span>'+r+'</span><span class="rb"><i style="width:'+(ids.length?d/ids.length*100:0)+'%"></i></span></button>'}).join('');
+  var mods=rankMods(arank).map(function(m){var ms=modStats(m),mp=(S.modPassed||{})[m.id];
+    return '<button class="mrow" data-module="'+m.id+'" style="'+cvars(m.id)+'">'+mico(m.id)+'<span class="grow"><span class="s">Module '+m.num+' · '+ms.n+' leçons · '+dur(ms.min)+'</span><span class="t">'+esc(m.title)+'</span><span class="mbar"><i style="width:'+(ms.d/ms.n*100)+'%"></i></span></span>'+(mp?'<span class="okb">Réussi</span>':'<span class="chev">›</span>')+'</button>'}).join('');
+  var rIds=rankLessons(arank),rDone=rIds.filter(function(id){return S.passed[id]}).length;
+  var rMods=rankMods(arank),mDone=rMods.filter(function(m){return (S.modPassed||{})[m.id]}).length,isNext=arank===S.rank&&!S.grandMaster,ready=S.admin||(isNext&&mDone===rMods.length);var exN=arank>=7?60:50;
+  var passedR=arank<S.rank||(arank===7&&S.grandMaster);
+  var exam='<div class="cta">'+ring(rMods.length?mDone/rMods.length:0,48,5,'<span style="font-size:13px">'+mDone+'/'+rMods.length+'</span>',passedR?'var(--up)':null)+'<div class="grow"><div style="font-size:16px;font-weight:600;letter-spacing:-.015em">'+(arank<7?'Examen pour devenir '+RANKS[arank]:'Examen final')+'</div><div class="note">'+(passedR?'Réussi.':exN+' questions · '+Math.ceil(exN*0.8)+' requises'+(ready?'':' · réussis d’abord les tests de module'))+'</div></div>'+(ready&&!passedR?'<button class="btn small" data-exam="'+arank+'">Passer</button>':'')+'</div>';
+  return '<div class="screen">'+
+   '<div class="pg-h"><div><div class="sub">'+passedN+' sur '+total+' leçons validées</div><h1>Cours</h1></div>'+ring(passedN/total,58,6,'<span style="font-size:13px">'+Math.round(passedN/total*100)+'%</span>')+'</div>'+
+   '<form id="qaForm" class="srch">'+ICO.search+'<input type="search" id="qaIn" placeholder="Rechercher dans les cours" autocomplete="off" aria-label="Rechercher dans les cours"></form><div id="qaRes" class="grp"></div><div class="ai" id="qaOut" hidden></div>'+placementCard()+
+   '<section class="sect"><div class="sect-t"><h2>Ton parcours</h2><span class="note">Rang actuel : '+esc(RANKS[S.rank-1])+'</span></div><div class="rsel" role="group" aria-label="Rangs">'+ranks+'</div></section>'+
+   '<section class="sect"><div class="sect-t"><h2>Rang '+arank+' · '+esc(RANKS[arank-1])+'</h2><span class="note">'+rDone+'/'+rIds.length+' leçons</span></div><div class="grp">'+mods+'</div>'+exam+'</section>'+
+   liveSection()+'</div>'}
+function screenOutils(){var due=srsDue().length,passedN=LORDER.filter(function(id){return S.passed[id]}).length,h=amfS().hist,last=h[h.length-1],cur=amfS().cur&&amfS().cur.end>now();
+  var tile=function(attr,ic,t,sub){return '<button class="tile" '+attr+'>'+ic+'<span><b>'+t+'</b><small>'+sub+'</small></span></button>'};
+  return '<div class="screen"><div class="pg-h"><div><div class="sub">Réviser, s’entraîner, calculer</div><h1>Outils</h1></div></div>'+
+   '<section class="sect"><div class="sect-t"><h2>Mon compte</h2></div><div class="card">'+accountCard()+'</div></section>'+
+   '<button class="hero2" data-amf="hub" style="--c1:#6C8CFF;--c2:#4FD1C5"><span class="bgi">'+svgI(TICO.amf)+'</span><span class="k">Certification AMF</span><span class="ttl">'+(cur?'Reprendre ton examen blanc':'Prépare la certification AMF')+'</span><span class="ft">'+(last?'Dernier essai : '+last.ok+'/'+last.n+(last.mode!=='theme'?' · '+(last.pass?'réussi':'pas encore'):''):'12 thèmes · 120 QCM · 2 heures · 80 % requis')+'</span><span class="pl">'+(cur?'Reprendre':'S’entraîner')+' ›</span></button>'+
+   '<section class="sect"><div class="sect-t"><h2>Réviser</h2></div><div class="tiles">'+
+    tile('data-srs="1"',tico('srs','#F59E0B','#EF4444','sm'),'Révision du jour',due?Math.min(due,10)+' question'+(due>1?'s':'')+' à revoir':'Rien à revoir aujourd’hui')+
+    tile('data-review="1"',tico('mix','#A78BFA','#6366F1','sm'),'Révision mélangée',passedN?'10 questions de tes leçons':'Après ta 1re leçon')+
+    tile('data-glossary="1"',tico('gloss','#22D3EE','#3B82F6','sm'),'Glossaire',Object.keys(GLOSS).length+' termes expliqués')+
+    tile('data-basics="1"',tico('basics','#34D399','#0EA5E9','sm'),'Rappels de calcul','Pourcentages, puissances…')+'</div></section>'+
+   '<section class="sect"><div class="sect-t"><h2>Simulateurs</h2></div><div class="tiles">'+
+    tile('data-sim="interets"',tico('interets','#34D399','#16A34A','sm'),'Intérêts composés','Ce que devient ton épargne')+
+    tile('data-sim="frais"',tico('frais','#FB7185','#E11D48','sm'),'Effet des frais','0,2 % ou 1,8 % sur 30 ans')+
+    tile('data-sim="fisc"',tico('fisc','#FBBF24','#F97316','sm'),'PEA, CTO ou assurance-vie','Ce qu’il te reste après impôts')+
+    tile('data-sim="credit"',tico('credit','#60A5FA','#6366F1','sm'),'Coût d’un crédit','Mensualité et intérêts')+'</div></section>'+
+   '<section class="sect"><div class="sect-t"><h2>Ta progression</h2></div>'+strengthsCard()+'</section>'+
+   '<div class="legal">'+[['mentions','Mentions légales'],['cgu','Conditions d’utilisation'],['confid','Données'],['avert','Risques']].map(function(x){return '<button data-legal="'+x[0]+'">'+x[1]+'</button>'}).join('')+'</div>'+
+   '<p class="note" style="text-align:center;margin-top:-14px">Mindinvest est un outil éducatif. Rien ici n’est un conseil en investissement.</p></div>'}
+function openModule(mid){
+  var m=COURSES.filter(function(x){return x.id===mid})[0];if(!m)return;var ms=modStats(m),mp=(S.modPassed||{})[m.id],rdy=S.admin||ms.d===ms.n;
+  sheet('<div class="sheet-top"><span class="k">'+(m.live?'Cours d’actualité':'Rang '+m.rank+' · '+esc(RANKS[m.rank-1]))+'</span><button class="xbtn" data-close="1" aria-label="Fermer">✕</button></div>'+
+   '<div class="hero2" style="'+cvars(m.id)+';cursor:default"><span class="bgi">'+svgI(MICO[m.id]||MICO.m01)+'</span><span class="k">Module '+m.num+' · '+ms.n+' leçons · '+dur(ms.min)+'</span><span class="ttl">'+esc(m.title)+'</span><span class="ft">'+ms.d+' sur '+ms.n+' validée'+(ms.d>1?'s':'')+'</span><span class="hb"><i style="width:'+(ms.d/ms.n*100)+'%"></i></span></div>'+
+   (m.intro?'<p style="margin:0;font-size:16px;line-height:1.5;color:var(--sec)">'+esc(m.intro)+'</p>':'')+
+   '<div class="grp">'+m.lessons.map(function(l,ix){var ok=S.passed[l.id];return '<button class="lrow" data-lesson="'+l.id+'"><span class="dot'+(ok?' ok':'')+'">'+(ok?'✓':ix+1)+'</span><span style="flex:1;min-width:0"><span class="t" style="display:block">'+esc(l.title)+'</span><span class="s" style="display:block">'+(l.min||8)+' min · '+l.quiz.length+' questions</span></span><span class="muted">›</span></button>'}).join('')+'</div>'+
+   (m.live?'':'<div class="cta">'+ring(mp?1:0,48,5,mp?'✓':'',mp?'var(--up)':null)+'<div class="grow"><div style="font-size:17px;font-weight:600">Test du module</div><div class="note">30 questions · 24 requises · chronométré</div></div>'+(rdy?'<button class="btn small'+(mp?' ghost':'')+'" data-modtest="'+m.id+'">'+(mp?'Refaire':'Passer')+'</button>':'<span class="badge">Après les leçons</span>')+'</div>'));
+}
+function render(){
+  ensureWeek(); checkSkills(); save(); renderTabs();
+  var v=$('#view');
+  if(['accueil','apprendre','actus','outils'].indexOf(tab)<0)tab='accueil';
+  v.innerHTML = tab==='accueil'?screenHome():tab==='actus'?screenActus():tab==='outils'?screenOutils():screenApprendre();
+}
+/* ---------- search across all lessons + AI answer ---------- */
+function normTxt(t){return String(t).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/<[^>]+>/g,' ')}
+function searchLessons(q){var w=normTxt(q).split(/[^a-z0-9]+/).filter(function(x){return x.length>2&&['les','des','une','est','que','qui','quoi','comment','pour','dans','avec','cest'].indexOf(x)<0});if(!w.length)return [];
+  return LORDER.map(function(id){var l=LX[id],t=normTxt(l.title),k=normTxt((l.keys||[]).join(' ')),b=normTxt(l.body.join(' ')+' '+(l.deep||[]).join(' ')),sc=0;
+    w.forEach(function(x){if(t.indexOf(x)>=0)sc+=6;if(k.indexOf(x)>=0)sc+=3;if(b.indexOf(x)>=0)sc+=1});return [sc,id]}).filter(function(x){return x[0]>0}).sort(function(a,b){return b[0]-a[0]}).slice(0,3).map(function(x){return x[1]})}
+document.addEventListener('submit',function(e){if(!e.target||e.target.id!=='qaForm')return;e.preventDefault();var q=$('#qaIn').value.trim();if(!q)return;
+  var ids=searchLessons(q),r=$('#qaRes');r.innerHTML=ids.map(function(id){var l=LX[id];return '<button class="item" data-lesson="'+id+'"><div class="grow"><div class="t">'+esc(l.title)+'</div><div class="s">Rang '+l.mod.rank+' · '+esc(l.mod.title)+'</div></div><span class="muted">›</span></button>'}).join('');
+  var ctx=ids.map(function(id){var l=LX[id];return l.title+' : '+(l.keys||[]).join(' ')}).join(' | ');
+  var o=$('#qaOut');o.hidden=false;askAI('Tu es le professeur de l’application Mindinvest (éducation financière, en français). Réponds précisément et pédagogiquement, en 8 phrases maximum, avec un exemple chiffré si utile, sans conseil d’investissement personnalisé et sans renvoyer vers d’autres sites ou cours externes : tout doit être expliqué ici. Si la question concerne un chiffre réglementaire récent, précise qu’il faut le vérifier. Leçons liées dans l’app : '+ctx+'. Question : '+q,o,ids.length?'Les leçons ci-dessus traitent de ta question. Dans l’app, l’IA y répondrait aussi directement.':'Aucune leçon ne correspond exactement. Dans l’app, l’IA répondrait directement à ta question.')});
+
+/* ---------- lessons and quizzes ---------- */
+/* ---------- lesson figures (inline SVG charts, theme colors) ---------- */
+var FC=['var(--acc)','#E8891C','var(--sec)'];
+function fwrap(title,sub,svg,legend,note){return '<figure class="fig"><figcaption><b>'+title+'</b>'+(sub?'<span>'+sub+'</span>':'')+'</figcaption>'+(legend?'<div class="flg">'+legend+'</div>':'')+svg+(note?'<p class="fnote">'+note+'</p>':'')+'</figure>'}
+function flegend(series){return series.length<2?'':series.map(function(s,i){return '<span><i style="background:'+(s.color||FC[i])+'"></i>'+s.name+'</span>'}).join('')}
+function niceMax(v){var p=Math.pow(10,Math.floor(Math.log10(v))),n=v/p;return (n<=1?1:n<=2?2:n<=2.5?2.5:n<=5?5:10)*p}
+function figLine(o){var W=340,H=190,L=44,R=14,T=12,B=26,pw=W-L-R,ph=H-T-B,n=o.x.length;
+  var all=[];o.series.forEach(function(s){all=all.concat(s.vals)});var mn=o.min!=null?o.min:0,mx=o.max||niceMax(Math.max.apply(null,all));
+  var X=function(i){return L+i/(n-1)*pw},Y=function(v){return T+ph-(v-mn)/(mx-mn)*ph};
+  var g='';for(var k=0;k<=4;k++){var v=mn+(mx-mn)*k/4,y=Y(v);g+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+y+'" y2="'+y+'" style="stroke:var(--sep)" stroke-width="1"/><text x="'+(L-6)+'" y="'+(y+4)+'" text-anchor="end" class="ft">'+o.fmt(v)+'</text>'}
+  var xl='';(o.xt||[0,Math.floor((n-1)/2),n-1]).forEach(function(i){xl+='<text x="'+X(i)+'" y="'+(H-8)+'" text-anchor="'+(i===0?'start':i===n-1?'end':'middle')+'" class="ft">'+o.x[i]+'</text>'});
+  var ln='';o.series.forEach(function(s,si){var c=s.color||FC[si];ln+='<polyline fill="none" style="stroke:'+c+'" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round" points="'+s.vals.map(function(v,i){return X(i).toFixed(1)+','+Y(v).toFixed(1)}).join(' ')+'"/>';
+    var last=s.vals.length-1;if(o.series.length>1){var li=o.labelStart?0:last;ln+='<text x="'+(X(li)+(o.labelStart?4:-4))+'" y="'+(Y(s.vals[li])+(s.ldy||-8))+'" text-anchor="'+(o.labelStart?'start':'end')+'" class="fv" style="fill:'+c+'">'+s.name.split(' (')[0]+'</text>'}ln+='<circle cx="'+X(last)+'" cy="'+Y(s.vals[last])+'" r="4" style="fill:'+c+';stroke:var(--card)" stroke-width="2"><title>'+s.name+' : '+o.fmt(s.vals[last])+'</title></circle>';
+    (s.marks||[]).forEach(function(i){ln+='<circle cx="'+X(i)+'" cy="'+Y(s.vals[i])+'" r="4.5" style="fill:'+c+';stroke:var(--card)" stroke-width="2"><title>'+o.x[i]+' : '+o.fmt(s.vals[i])+'</title></circle><text x="'+(X(i)+7)+'" y="'+(Y(s.vals[i])-7)+'" class="fv">'+o.fmt(s.vals[i])+'</text>'})});
+  (o.labels||[]).forEach(function(t){ln+='<text x="'+X(t[0])+'" y="'+(Y(t[1])+(t[3]||-8))+'" text-anchor="'+(t[4]||'end')+'" class="fv">'+t[2]+'</text>'});
+  var svg='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+esc(o.title)+'">'+g+xl+ln+'</svg>';
+  return fwrap(o.title,o.sub,svg,flegend(o.series),o.note)}
+function figBars(o){var rows=o.items.map(function(it,i){var w=Math.abs(it.v)/o.max*100;return '<div class="fb"><span class="fl">'+it.label+'</span><span class="ftrack"><i style="width:'+w.toFixed(1)+'%;background:'+(it.color||'var(--acc)')+'" title="'+esc(it.label+' : '+o.fmt(it.v))+'"></i></span><span class="fvv num">'+o.fmt(it.v)+'</span></div>'}).join('');
+  return fwrap(o.title,o.sub,'<div class="fbars">'+rows+'</div>','',o.note)}
+function figStack(o){var rows=o.items.map(function(it){var tot=it.parts.reduce(function(a,b){return a+b},0);return '<div class="fb"><span class="fl">'+it.label+'</span><span class="ftrack" style="width:'+(tot/o.max*100).toFixed(1)+'%">'+it.parts.map(function(p,i){return '<i style="flex:'+p+';background:'+(o.colors[i])+'" title="'+esc(o.names[i]+' : '+o.fmt(p))+'"></i>'}).join('')+'</span><span class="fvv num">'+(o.tfmt?o.tfmt(it.parts):o.fmt(tot))+'</span></div>'}).join('');
+  return fwrap(o.title,o.sub,'<div class="fbars stack">'+rows+'</div>',o.names.map(function(n,i){return '<span><i style="background:'+o.colors[i]+'"></i>'+n+'</span>'}).join(''),o.note)}
+var fk=function(v){return v>=1e6?nf1.format(v/1e6)+' M€':v>=1e4?nf0.format(v/1e3)+' k€':nf0.format(v)+' €'};
+var fp=function(v){return nf1.format(v)+' %'};
+function range(n){var a=[];for(var i=0;i<n;i++)a.push(i);return a}
+function bondPrice(c,y,n){var p=0;for(var t=1;t<=n;t++)p+=c/Math.pow(1+y,t);return p+100/Math.pow(1+y,n)}
+var FIGS={
+ m01l2:function(){var yrs=range(31);return figLine({title:'Ce que valent 100 € avec le temps',sub:'Pouvoir d’achat de 100 € laissés sans rendement',x:yrs.map(function(y){return y+' an'+(y>1?'s':'')}),xt:[0,10,20,30],fmt:function(v){return nf0.format(v)+' €'},max:100,
+   series:[{name:'Inflation 2 %',vals:yrs.map(function(t){return 100/Math.pow(1.02,t)})},{name:'Inflation 3 %',ldy:14,vals:yrs.map(function(t){return 100/Math.pow(1.03,t)})},{name:'Inflation 5 %',ldy:14,vals:yrs.map(f
