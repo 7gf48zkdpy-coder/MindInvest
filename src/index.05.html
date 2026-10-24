@@ -1,0 +1,152 @@
+:r.name,pts:r.pts,real:1}});
+  if(list.length<19)list=list.concat(bots(wk,lg,frac).slice(0,19-list.length).map(function(b){b.bot=1;return b}));
+  list.push({name:S.pseudo||'Toi',pts:myPoints(),me:1});list.sort(function(a,b){return b.pts-a.pts||(a.me?-1:1)});return list}
+function standings(){return leagueList(S.lg.week,S.lg.league,weekFrac(S.lg.week))}
+function ensureWeek(){var wk=weekKey(new Date());
+  if(S.lg.week&&S.lg.week!==wk){var fl=leagueList(S.lg.week,S.lg.league,1);var rk=fl.findIndex(function(x){return x.me})+1,old=S.lg.league;
+    if(rk<=5&&S.lg.league<LEAGUES.length-1)S.lg.league++;else if(rk>15&&S.lg.league>0)S.lg.league--;
+    S.lg.last={rank:rk,from:old,to:S.lg.league};S.lg.xp=0}
+  if(S.lg.week!==wk){S.lg.week=wk;save()}}
+function addXP(n){if(n>0){S.lg.xp+=n}}
+function goalS(){var t=ymd(new Date());if(!S.goal||S.goal.d!==t)S.goal={d:t,ok:0,les:0,done:0};return S.goal}
+function streakNow(){var t=ymd(new Date()),y=ymd(new Date(Date.now()-864e5));return (S.lg.lastDay===t||S.lg.lastDay===y)?(S.lg.streak||0):0}
+function goalAdd(ok,les){var g=goalS();g.ok+=ok||0;g.les+=les||0;if(!g.done&&(g.ok>=10||g.les>=1)){g.done=1;markActiveDay();var n=S.lg.streak;setTimeout(function(){toast('Objectif du jour atteint · série de '+n+' jour'+(n>1?'s':''))},700)}save()}
+function goalCard(){var g=goalS(),p=g.done?1:Math.min(1,g.ok/10),sk=streakNow(),risk=!g.done&&sk>0;
+  return '<div class="goal'+(g.done?' done':'')+'">'+ring(p,64,7,g.done?'<span style="font-size:20px">✓</span>':'<span style="font-size:13px">'+Math.min(g.ok,10)+'/10</span>',g.done?'var(--up)':null)+
+   '<div class="grow"><b>'+(g.done?'Objectif du jour atteint':'Objectif du jour')+'</b><span class="note">'+(g.done?'Bravo ! Reviens demain pour allonger ta série.':'Valide 1 leçon ou donne 10 bonnes réponses (quiz, révision, défis, entraînement).')+'</span>'+
+   '<span class="streak'+(risk?' risk':'')+'">'+ICO.flame+' '+(sk?sk+' jour'+(sk>1?'s':'')+' d’affilée'+(risk?' · en jeu aujourd’hui':''):'Commence ta série aujourd’hui')+'</span></div></div>'}
+function markActiveDay(){var today=ymd(new Date());if(S.lg.lastDay===today)return 0;var y=ymd(new Date(Date.now()-864e5));S.lg.streak=(S.lg.lastDay===y)?S.lg.streak+1:1;S.lg.lastDay=today;S.bestStreak=Math.max(S.bestStreak||0,S.lg.streak);var b=Math.min(70,10*S.lg.streak);addXP(b);return b}
+function leagueCard(){var st=standings(),rk=st.findIndex(function(x){return x.me})+1;return '<button class="card" data-go="profil" style="border:0;text-align:left"><div class="row"><span class="eyebrow">Ligue '+LEAGUES[S.lg.league]+' · cette semaine</span><span class="badge acc">'+rk+'e / 20</span></div><div class="row"><span style="font-size:22px;font-weight:700" class="num">'+nf0.format(myPoints())+' pts</span><span class="note">'+(rk<=5?'Zone de promotion':rk>15?'Zone de relégation':'Top 5 pour monter')+'</span></div></button>'}
+function leagueSection(){
+  var st=standings(),rk=st.findIndex(function(x){return x.me})+1,lb=liveBonus(),end=new Date(S.lg.week+'T00:00:00').getTime()+7*864e5,left=Math.max(0,end-now()),dd=Math.floor(left/864e5),hh=Math.floor(left%864e5/36e5);
+  var rows=st.map(function(p,i){var zone=i<5&&S.lg.league<LEAGUES.length-1?'up':(i>=15&&S.lg.league>0?'down':'');return '<div class="item" style="'+(p.me?'background:var(--card2)':'')+'"><span class="num" style="width:26px;font-weight:700;'+(zone==='up'?'color:var(--up)':zone==='down'?'color:var(--down)':'color:var(--sec)')+'">'+(i+1)+'</span><div class="grow"><div class="t">'+esc(p.name)+(p.me?' <span class="badge acc">Toi</span>':p.bot?' <span class="badge" title="Joueur fictif">bot</span>':'')+'</div></div><span class="num" style="font-weight:600">'+nf0.format(p.pts)+' pts</span></div>'+(i===4&&S.lg.league<LEAGUES.length-1?'<div class="item" style="min-height:0;padding:6px 16px"><span class="note" style="color:var(--up)">▲ Promotion en ligue '+LEAGUES[S.lg.league+1]+'</span></div>':'')+(i===14&&S.lg.league>0?'<div class="item" style="min-height:0;padding:6px 16px"><span class="note" style="color:var(--down)">▼ Relégation</span></div>':'')}).join('');
+  return '<div class="eyebrow">Ligue de la semaine</div>'+
+   (S.lg.last?'<div class="card"><div class="note">Semaine dernière : '+S.lg.last.rank+'e. '+(S.lg.last.to>S.lg.last.from?'Promu en ligue '+LEAGUES[S.lg.last.to]+' !':S.lg.last.to<S.lg.last.from?'Redescendu en ligue '+LEAGUES[S.lg.last.to]+'.':'Maintenu en ligue '+LEAGUES[S.lg.last.to]+'.')+'</div></div>':'')+
+   '<div class="card hero"><div class="row"><span class="eyebrow">Ligue '+LEAGUES[S.lg.league]+' · '+(S.lg.league+1)+' / '+LEAGUES.length+'</span><span class="badge">Fin dans '+dd+' j '+hh+' h</span></div><div class="row"><span class="big num">'+rk+'<span style="font-size:16px">e</span></span><span class="num" style="font-size:20px;font-weight:700">'+nf0.format(myPoints())+' pts</span></div><div class="note">Top 5 : promotion · 5 derniers : relégation · Série de '+S.lg.streak+' jour'+(S.lg.streak>1?'s':'')+'</div></div>'+
+   '<div class="list">'+rows+'</div>'+
+   more('pts','Comment marquer des points','Ton détail de la semaine et le barème','<div class="card"><h3>Tes points cette semaine</h3><div class="row note"><span>Apprentissage (quiz, leçons, série)</span><span class="num">'+nf0.format(S.lg.xp)+'</span></div>'+lb.items.map(function(i){return '<div class="row note"><span>'+i[0]+'</span><span class="num">'+(i[1]>=0?'+':'')+i[1]+'</span></div>'}).join('')+'</div>'+
+   '<div class="card"><h3>Comment gagner des points</h3><div class="note">+10 par bonne réponse · +100 par leçon validée · +60 par révision réussie · +200 par examen de rang · dès le rang Visionnaire, jusqu’à 195 par flash actu quotidien et 600 par bilan de la semaine · +10 à +70 par jour de série · bonus de discipline et de performance fictive ajustée au risque.</div><div class="note">Acheter ou vendre ne rapporte aucun point : on gagne en devenant meilleur, pas en multipliant les ordres. Tu joues contre les autres membres connectés. Tant qu’il n’y a pas assez de vrais joueurs dans ta ligue, des joueurs fictifs marqués « bot » la complètent.</div></div>')+
+   friendsCard();
+}
+var RANKS=['Novice','Initié','Analyste','Stratège','Expert','Visionnaire','Légende'];
+var TIERS=[[1000,'Bronze','#C08457'],[5000,'Argent','#C9CED6'],[10000,'Or','#E5B53A'],[20000,'Platine','#A8D8E0'],[50000,'Saphir','#4C7DFF'],[100000,'Rubis','#E0445E'],[200000,'Émeraude','#2FBF71'],[500000,'Diamant','#D9F3FF'],[1000000,'Légende','#6BD47A']];
+function tierInfo(g){var cur=null,next=TIERS[0];for(var i=0;i<TIERS.length;i++){if(g>=TIERS[i][0]){cur=TIERS[i];next=TIERS[i+1]||null}}return {cur:cur,next:next}}
+var SIDES=[['comprendre','Comprendre','Valider une leçon de compréhension (marchés, ETF, histoire…)'],['calculer','Calculer','Valider une leçon de calcul (fondations, fiscalité)'],['analyser','Analyser','Valider une leçon d\'analyse (obligations, entreprises, macro…)'],['reviser','Réviser','Réussir une révision mélangée'],['pratiquer','Gérer','Remplir ton budget avec tes vrais chiffres'],['decider','Agir','Régler un papier ou tenir une échéance']];
+function checkSkills(){var b=S.bud;if(!b)return;
+  if(!b.demo&&(b.inc||[]).length)S.skills.pratiquer=1;
+  if((b.docs||[]).some(function(d){return d.status==='paid'||(d.plan&&d.plan.paid>0)}))S.skills.decider=1;
+}
+var hexN=0;
+function hexSvg(size){
+  var P=[[100,20],[169.3,60],[169.3,140],[100,180],[30.7,140],[30.7,60]],out='',lit=0,gid='hg'+(++hexN);
+  for(var i=0;i<6;i++){var a=P[i],b=P[(i+1)%6],on=!!S.skills[SIDES[i][0]];if(on)lit++;
+    out+='<line x1="'+a[0]+'" y1="'+a[1]+'" x2="'+b[0]+'" y2="'+b[1]+'" stroke="'+(on?'url(#'+gid+')':'var(--sep)')+'" stroke-width="15" stroke-linecap="round"/>'}
+  return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 200 200" role="img" aria-label="Hexagone de maîtrise : '+lit+' compétences sur 6"><defs><linearGradient id="'+gid+'" x1="0" y1="0" x2="200" y2="200" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="var(--g1)"/><stop offset="1" stop-color="var(--g2)"/></linearGradient></defs>'+out+'<text x="100" y="106" text-anchor="middle" font-size="40" font-weight="700" fill="var(--text)">'+lit+'/6</text><text x="100" y="130" text-anchor="middle" font-size="13" fill="var(--sec)">compétences</text></svg>';
+}
+
+/* ---------- question generators ---------- */
+function mcq(sig,q,correct,wrongs,fmt,explain,lesson){
+  var seen={},opts=[];var c=fmt(correct);seen[c]=1;opts.push({t:c,ok:1});
+  wrongs.forEach(function(w){var t=fmt(w);if(!seen[t]&&opts.length<4){seen[t]=1;opts.push({t:t,ok:0})}});
+  return {sig:sig,q:q,opts:shuffle(opts),explain:explain,lesson:lesson};
+}
+var GEN = {
+ compose:function(){var C=pick([1000,2000,3000,5000,8000,10000]),r=pick([3,4,5,6,7,8]),n=pick([5,8,10,12,15,20]);var v=C*Math.pow(1+r/100,n);
+   return mcq('compose-'+C+'-'+r+'-'+n,'Tu places '+eur0(C)+' à '+r+' % par an, intérêts réinvestis, pendant '+n+' ans. Combien auras-tu environ ?',v,[C*(1+r/100*n),C*Math.pow(1+r/100,n/2),C*Math.pow(1+r/100,n)*1.25],eur0,'Intérêts composés : '+eur0(C)+' × (1 + '+r+' %)^'+n+' ≈ '+eur0(v)+'. La réponse « '+eur0(C*(1+r/100*n))+' » oublie que les intérêts produisent eux-mêmes des intérêts.','l1')},
+ regle72:function(){var r=pick([2,3,4,6,8,9,12]);var v=72/r;
+   return mcq('r72-'+r,'Avec la règle de 72, en combien de temps environ un capital placé à '+r+' % par an double-t-il ?',v,[100/r,36/r,r*2],function(x){return nf1.format(x)+' ans'},'Règle de 72 : 72 ÷ '+r+' ≈ '+nf1.format(v)+' ans.','l1')},
+ inflation:function(){var A=pick([1000,5000,10000]),i=pick([2,3,4]),n=pick([10,15,20]);var v=A/Math.pow(1+i/100,n);
+   return mcq('inf-'+A+'-'+i+'-'+n,'Avec une inflation de '+i+' % par an, que vaudront en pouvoir d\'achat '+eur0(A)+' laissés sur un compte non rémunéré pendant '+n+' ans ?',v,[A,A*Math.pow(1+i/100,n),A*(1-i/100*n)*1.15],eur0,eur0(A)+' ÷ (1 + '+i+' %)^'+n+' ≈ '+eur0(v)+' : l\'argent qui dort perd de la valeur.','l1')},
+ bond:function(){var c=pick([2,3,4,5]),dy=pick([-2,-1,1,2]),y=Math.max(1,c+dy);if(y===c)y=c+1;var n=pick([5,10]);var pr=0;for(var t=1;t<=n;t++)pr+=10*c/Math.pow(1+y/100,t);pr+=1000/Math.pow(1+y/100,n);
+   var sw=0;for(t=1;t<=n;t++)sw+=10*y/Math.pow(1+c/100,t);sw+=1000/Math.pow(1+c/100,n);
+   return mcq('bond-'+c+'-'+y+'-'+n,'Une obligation de 1 000 € à '+n+' ans verse un coupon de '+c+' %. Les taux du marché passent à '+y+' %. Que vaut-elle environ ?',pr,[1000,sw,1000*(1+(c-y)/100*n*1.6)],eur0,'Quand les taux du marché '+(y>c?'montent':'baissent')+', le prix d\'une obligation existante '+(y>c?'baisse':'monte')+' : ici ≈ '+eur0(pr)+', pour que son rendement s\'aligne sur '+y+' %.','l3')},
+ per:function(){var PER=pick([8,10,12,15,20,25,30]),P=pick([24,36,48,60,90,120,150]);var eps=P/PER;
+   return mcq('per-'+PER+'-'+P,'Une action cote '+eur(P)+' et la société gagne '+eur(eps)+' par action. Quel est son PER ?',PER,[100/PER,PER*2,PER/2],function(x){return nf1.format(x)},'PER = cours ÷ bénéfice par action = '+eur(P)+' ÷ '+eur(eps)+' = '+PER+'.','l2')},
+ recov:function(){var L=pick([10,20,25,30,40,50,60]);var g=L/(100-L)*100;
+   return mcq('recov-'+L,'Ton portefeuille perd '+L+' %. Quelle hausse faut-il ensuite pour revenir au point de départ ?',g,[L,L*1.5,L*0.8],function(x){return '+'+nf0.format(Math.round(x))+' %'},'Après −'+L+' %, il reste '+(100-L)+' % du capital : il faut ×'+nf2.format(100/(100-L))+', soit +'+nf0.format(Math.round(g))+' %.','l3')},
+ divy:function(){var D=pick([1,1.5,2,3,4]),P=pick([25,40,50,80,100]);var v=D/P*100;
+   return mcq('divy-'+D+'-'+P,'Une action à '+eur(P)+' verse un dividende annuel de '+eur(D)+'. Quel est son rendement du dividende ?',v,[P/D,v*10,v/2],function(x){return nf2.format(x)+' %'},'Rendement = dividende ÷ cours = '+eur(D)+' ÷ '+eur(P)+' = '+nf2.format(v)+' %.','l2')},
+ fees:function(){var C=pick([10000,20000,50000]),n=pick([20,25,30]),f2=pick([1.5,2]);var a=C*Math.pow(1.06-0.002,n),b=C*Math.pow(1.06-f2/100,n),d=a-b;
+   return mcq('fees-'+C+'-'+n+'-'+f2,eur0(C)+' placés '+n+' ans à 6 % brut par an. Combien coûte un fonds à '+nf1.format(f2)+' % de frais annuels par rapport à un ETF à 0,2 % ?',d,[C*(f2-0.2)/100*n,d/2.4,d*1.8],eur0,'Les frais se composent comme les gains : environ '+eur0(d)+' d\'écart à la fin. Le calcul « linéaire » sous-estime l\'effet.','l2')},
+ cETF:function(){var v=pick([
+   ['cetf1','Que fait un ETF indiciel ?','Il copie la performance d\'un indice',['Il choisit les meilleures actions chaque jour','Il garantit le capital','Il prête ton argent à l\'État']],
+   ['cetf2','Que signifie « ETF capitalisant » ?','Les dividendes sont réinvestis automatiquement',['Les dividendes sont versés sur ton compte','Le fonds n\'achète que des grandes entreprises','Le fonds est garanti par une banque']],
+   ['cetf3','Pourquoi un seul ETF Monde offre-t-il une forte diversification ?','Il détient des centaines d\'entreprises de nombreux pays',['Il ne contient que des obligations','Il investit dans une seule société très solide','Il change d\'indice chaque mois']],
+   ['cetf4','Quel indicateur mesure les frais annuels d\'un ETF ?','Les frais courants (TER)',['Le PER','Le coupon','La duration']]]);
+   return mcq(v[0],v[1],v[2],v[3],function(x){return x},'Bonne réponse : '+v[2]+'.','l2')},
+ cBond:function(){var v=pick([
+   ['cb1','Les taux d\'intérêt du marché montent. Que devient le prix d\'une obligation déjà émise ?','Il baisse',['Il monte','Il ne change pas','Il double']],
+   ['cb2','Les taux d\'intérêt du marché baissent. Que devient le prix d\'une obligation déjà émise ?','Il monte',['Il baisse','Il ne change pas','Elle est remboursée immédiatement']],
+   ['cb3','Qu\'est-ce que le coupon d\'une obligation ?','L\'intérêt versé régulièrement au prêteur',['Le prix d\'achat de l\'obligation','Une réduction sur les frais','Le dividende d\'une action']],
+   ['cb4','Une obligation longue (20 ans) face à une courte (2 ans), si les taux montent :','La longue baisse davantage',['La courte baisse davantage','Les deux baissent autant','Aucune ne bouge']]]);
+   return mcq(v[0],v[1],v[2],v[3],function(x){return x},'Bonne réponse : '+v[2]+'.','l3')},
+ cBase:function(){var v=pick([
+   ['cba1','Avant d\'investir en Bourse, que faut-il constituer en priorité ?','Une épargne de précaution disponible',['Un portefeuille de cryptomonnaies','Un crédit à la consommation','Un placement bloqué 10 ans']],
+   ['cba2','Qu\'est-ce que les intérêts composés ?','Des intérêts qui rapportent eux-mêmes des intérêts',['Des intérêts versés une seule fois','Des frais bancaires cachés','Un impôt sur les gains']],
+   ['cba3','Quel facteur pèse le plus dans les intérêts composés ?','La durée de placement',['La couleur de l\'application','Le jour de la semaine où l\'on investit','Le nombre de comptes bancaires']]]);
+   return mcq(v[0],v[1],v[2],v[3],function(x){return x},'Bonne réponse : '+v[2]+'.','l1')}
+};
+function buildQuiz(gens,lastSigs){
+  var qs=[],used={};
+  gens.forEach(function(g){var q,tries=0;do{q=GEN[g]();tries++}while((used[q.sig]||lastSigs.indexOf(q.sig)>=0)&&tries<25);used[q.sig]=1;qs.push(q)});
+  return qs;
+}
+
+/* ---------- courses (cours.json, published next to the page) ---------- */
+var COURSES=[],LX={},LORDER=[],coursesState='loading';
+var MOD_SIDE={m01:'calculer',m02:'comprendre',m03:'comprendre',m04:'analyser',m05:'analyser',m06:'comprendre',m07:'analyser',m08:'comprendre',m09:'calculer',m10:'comprendre',m11:'analyser',m12:'comprendre',m13:'analyser'};
+var LEGACY={l1:'m01l1',l2:'m03l1',l3:'m04l1'};
+function qdec(lid,x){var b=atob(x),key='i26k|'+lid+'|q',u=new Uint8Array(b.length);for(var i=0;i<b.length;i++)u[i]=b.charCodeAt(i)^key.charCodeAt(i%key.length)^((i*31)&255);return JSON.parse(new TextDecoder().decode(u))}
+function loadCourses(){
+  fetch('cours.json').then(function(r){if(!r.ok)throw new Error(r.status);return r.json()}).then(function(mods){
+    COURSES=mods;LX={};LORDER=[];
+    mods.forEach(function(m){m.lessons.forEach(function(l,ix){l.quiz=(l.quiz||[]).map(function(q){if(!q.x)return q;try{var r=qdec(l.id,q.x);return {q:q.q,d:q.d,a:r[0],w:r[1],e:r[2]}}catch(e){return null}}).filter(Boolean);l.mod=m;l.ix=ix;l.side=MOD_SIDE[m.id]||'comprendre';LX[l.id]=l;if(!m.live)LORDER.push(l.id)})});
+    Object.keys(LEGACY).forEach(function(o){if(S.passed[o]){delete S.passed[o];if(LX[LEGACY[o]])S.passed[LEGACY[o]]=1}});
+    Object.keys(S.passed).forEach(function(id){if(!LX[id])delete S.passed[id]});
+    coursesState='ok';save();render();
+  }).catch(function(){coursesState='err';render()});
+}
+function rankMods(r){return COURSES.filter(function(m){return m.rank===r})}
+function rankLessons(r){var a=[];rankMods(r).forEach(function(m){m.lessons.forEach(function(l){a.push(l.id)})});return a}
+function modLabel(l){return 'Module '+l.mod.num+' · '+l.mod.title}
+var UNI={
+ yale252:['Yale · Financial Markets (Robert Shiller)','https://oyc.yale.edu/economics/econ-252-11'],
+ yale251:['Yale · Financial Theory (John Geanakoplos)','https://oyc.yale.edu/economics/econ-251'],
+ coursera:['Yale sur Coursera · Financial Markets (Shiller)','https://www.coursera.org/learn/financial-markets-global'],
+ mit401:['MIT · 15.401 Finance Theory I (Andrew Lo)','https://ocw.mit.edu/courses/15-401-finance-theory-i-fall-2008/'],
+ mit1402:['MIT · 14.02 Principles of Macroeconomics','https://ocw.mit.edu/courses/14-02-principles-of-macroeconomics-spring-2023/'],
+ nyu:['NYU Stern · cours gratuits d’Aswath Damodaran','https://pages.stern.nyu.edu/~adamodar/'],
+ khan:['Khan Academy · Finance et marchés de capitaux','https://www.khanacademy.org/economics-finance-domain/core-finance'],
+ bdf:['Banque de France · ABC de l’économie','https://abc-economie.banque-france.fr/'],
+ amf:['AMF · Espace épargnants','https://www.amf-france.org/fr/espace-epargnants']
+};
+var QTIME={1:30,2:50,3:60};
+function bankQ(l,qi,plain){var b=l.quiz[qi],opts=[{t:b.a,ok:1}].concat(b.w.map(function(w){return {t:w,ok:0}}));
+  return {sig:l.id+'#'+qi,q:b.q,opts:shuffle(opts),explain:b.e,lesson:l.id,d:b.d||1}}
+function poolOf(ids){var a=[];ids.forEach(function(id){var l=LX[id];if(l)l.quiz.forEach(function(_,i){a.push([l,i])})});return a}
+/* pick n items: unseen first; from attempt 2, harder questions first */
+function pickQs(pool,n,last,attempt,exclude){
+  exclude=exclude||{};
+  var c=shuffle(pool.filter(function(x){return !exclude[x[0].id+'#'+x[1]]}));
+  c.sort(function(a,b){var sa=last.indexOf(a[0].id+'#'+a[1])>=0?1:0,sb=last.indexOf(b[0].id+'#'+b[1])>=0?1:0;if(sa!==sb)return sa-sb;
+    return attempt>0?((b[0].quiz[b[1]].d||1)-(a[0].quiz[a[1]].d||1)):0});
+  return c.slice(0,n);
+}
+function buildTest(kind,id,attempt,last){
+  var n,pool,own=[],out=[];
+  if(kind==='srs')return shuffle(srsQs());
+  if(kind==='lesson'){var l=LX[id];n=20;
+    var ownN=Math.min(12,l.quiz.length);own=pickQs(poolOf([id]),ownN,last,attempt);
+    var ex={};own.forEach(function(x){ex[x[0].id+'#'+x[1]]=1});
+    var g=(l.gens||[]).filter(function(x){return GEN[x]}),gq=[];
+    for(var k=0;k<Math.min(g.length?3:0,n-own.length);k++){var q,t=0;do{q=GEN[g[k%g.length]]();t++}while(last.indexOf(q.sig)>=0&&t<25);q.lesson=id;q.d=attempt>0?3:2;gq.push(q)}
+    var modIds=l.mod.lessons.map(function(o){return o.id}).filter(function(x){return x!==id});
+    var rest=pickQs(poolOf(modIds),n-own.length-gq.length,last,attempt,ex);
+    if(own.length+gq.length+rest.length<n)rest=rest.concat(pickQs(poolOf(rankLessons(l.mod.rank)),n-own.length-gq.length-rest.length,last,attempt,ex));
+    out=own.concat(rest).map(function(x){return bankQ(x[0],x[1])}).concat(gq);
+  } else {
+    var ids=kind==='module'?COURSES.filter(function(m){return m.id===id})[0].lessons.map(function(l){return l.id}):kind==='exam'?rankLessons(id):(kind==='review'&&id)?COURSES.filter(function(m){return m.id===id})[0].lessons.map(function(l){return l.id}):LORDER.filter(function(x){return S.passed[x]});
+    if(!ids.length)ids=LORDER.slice();
+    n=kind==='module'?30:kind==='exam'?(id>=7?60:50):10;
+    /* spread across lessons: round-robin over lessons, unseen first */
+    var by={};pickQs(poolOf(ids),99999,last,attempt).forEach(function(x){(by[
