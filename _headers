@@ -1,0 +1,14 @@
+/sw.js
+  Cache-Control: no-cache
+/manifest.json
+  Content-Type: application/manifest+json
+/index.html
+  Cache-Control: no-cache
+/cloud.js
+  Cache-Control: no-cache
+/news.json
+  Cache-Control: no-cache
+/cours.json
+  Cache-Control: no-cache
+/parametres.json
+  Cache-Control: no-cache
