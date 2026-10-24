@@ -1,0 +1,1025 @@
+{
+ "updated": "2026-10-24T07:30:00+02:00",
+ "items": [
+  {
+   "id": "n1",
+   "cat": "France",
+   "date": "2026-10-23",
+   "top": 1,
+   "title": "Dette : Moody’s maintient la note de la France à Aa3, à la surprise générale",
+   "sum": "Vendredi soir, Moody’s n’a pas modifié la note de la France, qui reste Aa3 avec une perspective négative, alors qu’une baisse d’un cran vers A1 était largement attendue. L’agence précise que cette note suppose l’adoption d’un budget 2027 qui réduit le déficit, visé à 5 % du PIB contre 5,4 % en 2026. Dans la semaine, le taux à 10 ans de la France est monté jusqu’à 5,14 % jeudi, un sommet depuis 2002, avant de revenir vers 5,03 % vendredi, avec un écart d’environ 1,7 point face à l’Allemagne.",
+   "why": "Une note reflète la capacité d’un État à rembourser : la maintenir évite à court terme des ventes forcées d’obligations françaises par certains fonds. Mais le répit est conditionnel, et S&P doit se prononcer le 27 novembre. Pour un particulier, des taux d’État élevés renchérissent le crédit immobilier mais rendent les nouveaux fonds en euros et obligations plus rémunérateurs.",
+   "tags": [
+    "Moody’s Aa3",
+    "OAT 5 % ↑",
+    "Budget 2027"
+   ],
+   "lessons": [
+    "m11l8",
+    "m04l3",
+    "m04l2"
+   ],
+   "src": [
+    "Reuters",
+    "Boursorama",
+    "BFM Bourse",
+    "Zonebourse"
+   ]
+  },
+  {
+   "id": "n2",
+   "cat": "Énergie",
+   "date": "2026-10-23",
+   "title": "Pétrole : le Brent dépasse 116 dollars, au plus haut depuis fin avril",
+   "sum": "Le Brent a franchi 116 dollars le baril vendredi, son plus haut niveau depuis fin avril, et signe une troisième hausse hebdomadaire d’affilée, d’environ 5 à 6 %. Les attaques des Houthis en Arabie saoudite se poursuivent : Saudi Aramco a fait évacuer son siège de Dhahran et Washington a rappelé son personnel non essentiel. Des informations évoquant de nouvelles frappes américaines et israéliennes contre l’Iran ajoutent à la tension. Le WTI a dépassé 100 dollars.",
+   "why": "Un pétrole cher pèse sur le pouvoir d’achat et entretient l’inflation, ce qui pousse les banques centrales à garder des taux élevés. En Bourse, il profite aux valeurs pétrolières, comme TotalEnergies vendredi, et pénalise les secteurs gros consommateurs d’énergie comme le transport aérien ou la chimie.",
+   "tags": [
+    "Brent ↑",
+    "Houthis",
+    "Inflation ↑"
+   ],
+   "lessons": [
+    "m13l5",
+    "m06l3",
+    "m13l2"
+   ],
+   "src": [
+    "Reuters",
+    "CNBC",
+    "Trading Economics",
+    "BFM Bourse"
+   ]
+  },
+  {
+   "id": "n3",
+   "cat": "Entreprises",
+   "date": "2026-10-23",
+   "title": "Kering s’effondre de 16,6 % après une nouvelle baisse des ventes de Gucci",
+   "sum": "Le groupe de luxe a publié un chiffre d’affaires de 3,35 milliards d’euros au troisième trimestre, en recul de 1 % à périmètre comparable. Gucci, sa principale marque, voit ses ventes baisser de 4 % à 1,29 milliard d’euros, avec un recul de 9 % dans ses boutiques en propre, plombé par l’Asie. Saint Laurent et Bottega Veneta ont mieux résisté. L’action a fini en baisse de 16,6 % vendredi et recule d’environ 41 % depuis janvier.",
+   "why": "Le chiffre global était conforme aux attentes, mais les investisseurs regardent surtout le moteur des profits, ici Gucci, et le calendrier de son redressement. Quand une entreprise dépend fortement d’une seule marque, chaque déception sur celle-ci pèse lourdement sur le cours : c’est un risque de concentration à garder en tête.",
+   "tags": [
+    "Kering ↓",
+    "Gucci",
+    "Luxe"
+   ],
+   "lessons": [
+    "m02l2",
+    "m05l6",
+    "m08l5"
+   ],
+   "src": [
+    "Investing.com",
+    "Boursorama",
+    "MoneyVox",
+    "BFM Bourse"
+   ]
+  },
+  {
+   "id": "n4",
+   "cat": "Entreprises",
+   "date": "2026-10-23",
+   "title": "Safran chute de 10 % malgré des ventes en hausse de 14,7 %",
+   "sum": "Le motoriste a publié un chiffre d’affaires ajusté de 9 milliards d’euros au troisième trimestre, en hausse de 14,7 % (13,4 % en organique), et confirmé ses objectifs annuels. Mais les ventes de pièces de rechange pour moteurs civils n’ont progressé que de 17 % en dollars, contre près de 27 % au trimestre précédent. L’action a perdu 10 %, à 271,80 euros, sa plus forte baisse en une séance depuis deux ans.",
+   "why": "L’après-vente est l’activité la plus rentable de Safran : un ralentissement y pèse davantage sur les bénéfices futurs que sur le chiffre d’affaires. Cet exemple montre qu’un cours réagit moins aux résultats passés qu’à ce qu’ils laissent prévoir, surtout quand la valorisation intègre déjà beaucoup d’optimisme.",
+   "tags": [
+    "Safran ↓",
+    "Après-vente",
+    "Attentes"
+   ],
+   "lessons": [
+    "m08l5",
+    "m05l1",
+    "m02l2"
+   ],
+   "src": [
+    "Safran",
+    "Investing.com",
+    "Upside24",
+    "Boursorama"
+   ]
+  },
+  {
+   "id": "n5",
+   "cat": "Entreprises",
+   "date": "2026-10-23",
+   "title": "L’Oréal grimpe de plus de 5 % grâce à des ventes meilleures que prévu",
+   "sum": "Le numéro un mondial des cosmétiques a réalisé 11,56 milliards d’euros de chiffre d’affaires au troisième trimestre, en hausse de 11,9 % et de 7,2 % à données comparables, au-dessus des attentes. Toutes les divisions progressent, en tête les produits professionnels et la beauté dermatologique, à plus de 12 %. L’action a gagné plus de 5 % vendredi, à contre-courant d’un luxe chahuté : la veille, Hermès avait perdu 4,9 % après un ralentissement de sa croissance.",
+   "why": "Au sein d’un même secteur, les résultats peuvent fortement diverger : L’Oréal monte quand Kering et Hermès reculent. Pour un investisseur, c’est un argument en faveur de la diversification, plutôt que de miser sur une seule valeur pour s’exposer à un thème.",
+   "tags": [
+    "L’Oréal ↑",
+    "Hermès ↓",
+    "Luxe"
+   ],
+   "lessons": [
+    "m02l2",
+    "m07l3",
+    "m05l1"
+   ],
+   "src": [
+    "L’Oréal",
+    "Upside24",
+    "MoneyVox",
+    "Zonebourse"
+   ]
+  },
+  {
+   "id": "n6",
+   "cat": "Marchés",
+   "date": "2026-10-23",
+   "title": "CAC 40 : une semaine en baisse de 2,2 %, plombée par la dette et le luxe",
+   "sum": "Le CAC 40 a fini vendredi à 7 782,82 points, en baisse de 0,36 %, et perd 2,19 % sur la semaine. Kering, Valeo et Safran ont pesé, tandis que L’Oréal, Sodexo et TotalEnergies montaient. Jeudi, l’indice avait déjà reculé de 1,4 %, entraîné par Hermès et les banques comme BNP Paribas, pénalisées par la défiance envers la dette française.",
+   "why": "Quand les taux d’un État montent, les banques qui détiennent beaucoup de ses obligations sont souvent les premières à souffrir en Bourse. Une semaine agitée rappelle aussi l’intérêt d’un horizon long et d’une épargne investie progressivement plutôt que d’un seul coup.",
+   "tags": [
+    "CAC 40 ↓",
+    "Banques ↓",
+    "Luxe"
+   ],
+   "lessons": [
+    "m02l3",
+    "m08l6",
+    "m07l5"
+   ],
+   "src": [
+    "BFM Bourse",
+    "Zonebourse",
+    "MoneyVox",
+    "Boursorama"
+   ]
+  },
+  {
+   "id": "n7",
+   "cat": "Marchés",
+   "date": "2026-10-23",
+   "title": "Wall Street : le Nasdaq a chuté de 2,6 % jeudi, inquiet du coût de l’IA",
+   "sum": "Jeudi, le Nasdaq a perdu 2,6 %, sa plus forte baisse depuis juin, et l’indice des semi-conducteurs 6,7 %. Meta a reculé de 7 % : malgré de bons résultats, ses dépenses dans l’intelligence artificielle ont rendu son flux de trésorerie négatif. Vendredi, le Dow Jones a cédé 1,18 % et le S&P 500 0,43 %, tandis que le Nasdaq se stabilisait. Alphabet, Microsoft et Amazon publient leurs résultats la semaine prochaine.",
+   "why": "Les marchés doutent que les investissements massifs dans l’IA soient rentables assez vite, et les valeurs technologiques pèsent lourd dans les grands indices. Un ETF sur le S&P 500 ou le Nasdaq est donc très exposé à ce thème : mieux vaut connaître le contenu de ses fonds.",
+   "tags": [
+    "Nasdaq ↓",
+    "IA",
+    "Meta ↓"
+   ],
+   "lessons": [
+    "m05l3",
+    "m02l3",
+    "m12l12"
+   ],
+   "src": [
+    "Reuters",
+    "TheStreet",
+    "Yahoo Finance"
+   ]
+  },
+  {
+   "id": "n8",
+   "cat": "France",
+   "date": "2026-10-23",
+   "title": "Budget de la Sécu : l’Assemblée rejette la partie recettes, 115 voix contre 1",
+   "sum": "Vendredi, les députés ont rejeté la partie recettes du projet de budget de la Sécurité sociale pour 2027, par 115 voix contre 1, le bloc central s’étant abstenu. Faute de recettes votées, la partie dépenses n’a pas été examinée et le texte part au Sénat dans sa version initiale, à partir du 9 novembre. Le gouvernement visait un déficit de la Sécurité sociale de 12,7 milliards d’euros en 2027, contre 21,8 milliards en 2026.",
+   "why": "Ce vote illustre la difficulté à adopter un budget qui réduit le déficit, condition posée par Moody’s pour maintenir la note de la France. Tant que l’incertitude dure, les investisseurs exigent une prime de risque plus élevée sur la dette française, ce qui se répercute sur les taux de crédit.",
+   "tags": [
+    "PLFSS",
+    "Déficit",
+    "Risque politique"
+   ],
+   "lessons": [
+    "m11l8",
+    "m13l10",
+    "m04l3"
+   ],
+   "src": [
+    "LCP",
+    "Le Club des Juristes",
+    "L’Esprit Français"
+   ]
+  },
+  {
+   "id": "n9",
+   "cat": "Taux",
+   "date": "2026-10-23",
+   "title": "Fed le 28 octobre, BCE le 29 : statu quo attendu, une hausse possible en décembre",
+   "sum": "La Réserve fédérale américaine se réunit les 27 et 28 octobre, et les marchés anticipent un maintien de ses taux, après une hausse en septembre. Les investisseurs guetteront des indices sur une nouvelle hausse en décembre, l’inflation américaine étant remontée à 3,7 % en septembre. La BCE se prononce le 29 octobre : là aussi, un statu quo est privilégié, avec une hausse jugée probable d’ici décembre.",
+   "why": "Des taux directeurs plus élevés rendent l’épargne sans risque plus rémunératrice mais pèsent sur la valeur des obligations existantes et sur les actions de croissance. Les marchés réagissent surtout au ton des banquiers centraux sur la suite, plus qu’à la décision du jour, souvent déjà anticipée.",
+   "tags": [
+    "Fed",
+    "BCE",
+    "Taux ↑"
+   ],
+   "lessons": [
+    "m11l4",
+    "m04l5",
+    "m11l6"
+   ],
+   "src": [
+    "Reuters",
+    "Boursorama",
+    "CME FedWatch"
+   ]
+  },
+  {
+   "id": "n10",
+   "cat": "Monde",
+   "date": "2026-10-19",
+   "title": "Chine : la croissance accélère à 4,5 % au troisième trimestre",
+   "sum": "Le PIB chinois a progressé de 4,5 % sur un an de juillet à septembre, après 4,3 % au deuxième trimestre, un peu mieux que les 4,4 % attendus. La production industrielle a augmenté de 5,5 % en septembre, soutenue par les exportations liées à l’IA, mais les ventes au détail n’ont gagné que 1,1 %. L’investissement immobilier reste en chute de 20,6 % sur les neuf premiers mois de l’année.",
+   "why": "La Chine est le premier acheteur mondial de matières premières et un débouché clé pour le luxe et l’industrie européenne. Une croissance portée par les exportations plutôt que par la consommation des ménages profite peu aux marques de luxe, ce qui éclaire leurs difficultés récentes.",
+   "tags": [
+    "Chine",
+    "Croissance ↑",
+    "Consommation"
+   ],
+   "lessons": [
+    "m11l1",
+    "m11l10",
+    "m06l2"
+   ],
+   "src": [
+    "Reuters",
+    "Investing.com",
+    "FXStreet"
+   ]
+  },
+  {
+   "id": "n11",
+   "cat": "Taux",
+   "date": "2026-10-16",
+   "title": "Zone euro : l’inflation confirmée à 3,8 %, la BCE sous pression",
+   "sum": "Eurostat a confirmé le 16 octobre une hausse des prix de 3,8 % sur un an en septembre, après 3,2 % en août, un plus haut depuis trois ans. Selon l’estimation rapide, l’énergie bondissait de 18,8 % et l’inflation sous-jacente, hors énergie et alimentation, restait plus contenue à 2,5 %. La France est à 3,4 % selon l’indice harmonisé.",
+   "why": "La BCE a déjà relevé son taux de dépôt à 2,50 % en septembre. Sa prochaine réunion a lieu le 29 octobre : une nouvelle hausse deviendrait plus probable si la hausse de l’énergie se diffusait aux services et aux salaires. C’est pour cela que l’inflation sous-jacente est l’indicateur à surveiller.",
+   "tags": [
+    "BCE",
+    "Obligations ↓",
+    "Livrets"
+   ],
+   "lessons": [
+    "m11l3",
+    "m04l5",
+    "m11l5"
+   ],
+   "src": [
+    "Eurostat",
+    "Boursorama",
+    "Zonebourse"
+   ]
+  },
+  {
+   "id": "n12",
+   "cat": "Épargne",
+   "date": "2026-10-15",
+   "title": "Épargne salariale : un record de 250,8 milliards d’euros",
+   "sum": "Selon l’Association française de la gestion financière (AFG), l’encours de l’épargne salariale et retraite d’entreprise a atteint 250,8 milliards d’euros fin juin, en hausse de 13,6 % sur un an. Les versements ont totalisé 17,2 milliards au premier semestre, dont 6,7 milliards d’intéressement, 5,2 milliards de participation et 3 milliards d’abondement des employeurs. Environ 13,6 millions de salariés en détiennent.",
+   "why": "L’abondement de l’employeur est un gain immédiat, avant même tout rendement de marché : c’est souvent l’enveloppe à exploiter en priorité quand elle existe. Plus de la moitié de ces sommes est disponible à tout moment, mais l’argent placé sur un PER collectif reste bloqué jusqu’à la retraite, sauf cas de déblocage anticipé.",
+   "tags": [
+    "PEE",
+    "PER",
+    "Abondement"
+   ],
+   "lessons": [
+    "m14l1",
+    "m09l5",
+    "m09l6"
+   ],
+   "src": [
+    "AFG",
+    "Europe 1",
+    "MoneyVox"
+   ]
+  }
+ ],
+ "quiz": [
+  {
+   "id": "q20261024-1",
+   "date": "2026-10-24",
+   "cat": "Finances publiques",
+   "q": "Le 23 octobre 2026, qu’a décidé Moody’s au sujet de la note de la France ?",
+   "a": "Maintien à Aa3, perspective négative",
+   "w": [
+    "Abaissement d’un cran, à A1",
+    "Maintien à Aa3, perspective stable",
+    "Abaissement de deux crans, à A2"
+   ],
+   "e": "Contre toute attente, Moody’s a laissé la note à Aa3 avec une perspective négative, en supposant l’adoption d’un budget 2027 qui réduit le déficit.",
+   "n": "n1",
+   "d": 1
+  },
+  {
+   "id": "q20261024-2",
+   "date": "2026-10-24",
+   "cat": "Finance d’entreprise",
+   "q": "Les ventes de Safran ont crû de 14,7 % au 3e trimestre 2026, mais l’action a chuté de 10 %. Pourquoi ?",
+   "a": "Son après-vente, très rentable, a ralenti",
+   "w": [
+    "Ses ventes ont manqué les attentes",
+    "Il a abaissé ses objectifs annuels",
+    "Il a lancé une augmentation de capital"
+   ],
+   "e": "Les ventes de pièces de rechange, l’activité la plus rentable, n’ont crû que de 17 % contre près de 27 % au trimestre précédent, ce qui fait douter des bénéfices futurs.",
+   "n": "n4",
+   "d": 2
+  },
+  {
+   "id": "q20261024-3",
+   "date": "2026-10-24",
+   "cat": "Énergie et matières premières",
+   "q": "Pourquoi Saudi Aramco a-t-il fait évacuer son siège de Dhahran fin octobre 2026 ?",
+   "a": "Des attaques des Houthis en Arabie saoudite",
+   "w": [
+    "Une marée noire au large de ses terminaux",
+    "Des frappes israéliennes sur ses installations",
+    "Une grève massive de ses salariés saoudiens"
+   ],
+   "e": "Les attaques répétées des Houthis en Arabie saoudite ont conduit Aramco à évacuer son siège, ce qui a poussé le Brent au-dessus de 116 dollars.",
+   "n": "n2",
+   "d": 2
+  },
+  {
+   "id": "q20261024-4",
+   "date": "2026-10-24",
+   "cat": "Marchés",
+   "q": "Le 22 octobre 2026, le Nasdaq a perdu 2,6 %, sa pire séance depuis juin. Quelle inquiétude a pesé ?",
+   "a": "Le coût des investissements dans l’IA",
+   "w": [
+    "Une hausse surprise des taux de la Fed",
+    "Un net recul de l’emploi américain",
+    "La baisse de la note des États-Unis"
+   ],
+   "e": "Les résultats de Meta et d’autres géants ont ravivé les doutes sur la rentabilité des dépenses massives dans l’intelligence artificielle.",
+   "n": "n7",
+   "d": 1
+  },
+  {
+   "id": "q20261024-5",
+   "date": "2026-10-24",
+   "cat": "Taux et banques centrales",
+   "q": "Vous achetez une OAT à 10 ans à 5 % et la gardez jusqu’au terme. Si les taux montent encore, que se passe-t-il ?",
+   "a": "Vos coupons ne changent pas et vous êtes remboursé au terme",
+   "w": [
+    "Vos coupons augmentent pour suivre les nouveaux taux du marché",
+    "Votre capital remboursé au terme baisse avec la hausse des taux",
+    "Vos coupons baissent pour compenser la hausse des taux"
+   ],
+   "e": "Le prix de l’obligation baisse si vous la revendez avant l’échéance, mais en la gardant jusqu’au bout vous touchez les coupons prévus et récupérez le nominal, sauf défaut de l’État.",
+   "n": "n1",
+   "d": 3
+  },
+  {
+   "id": "q20261022-1",
+   "date": "2026-10-22",
+   "cat": "Finances publiques",
+   "q": "Le 21 octobre 2026, le taux d’emprunt à 10 ans de la France a touché un niveau inédit depuis 2002. Lequel ?",
+   "a": "5 %",
+   "w": [
+    "4,5 %",
+    "5,5 %",
+    "6 %"
+   ],
+   "e": "L’OAT à 10 ans a atteint 5 % en séance, une première depuis l’été 2002, sur fond de doutes autour du budget 2027.",
+   "n": "n1",
+   "d": 1
+  },
+  {
+   "id": "q20261022-2",
+   "date": "2026-10-22",
+   "cat": "Marchés",
+   "q": "Pourquoi l’action EssilorLuxottica a-t-elle bondi d’environ 15 % le 21 octobre 2026 ?",
+   "a": "Des ventes trimestrielles meilleures que prévu",
+   "w": [
+    "Une offre de rachat lancée par un concurrent",
+    "L’annonce d’un dividende exceptionnel",
+    "Son entrée dans l’indice américain S&P 500"
+   ],
+   "e": "Son chiffre d’affaires a progressé de 9 % au troisième trimestre, au-dessus des attentes des analystes.",
+   "n": null,
+   "d": 1
+  },
+  {
+   "id": "q20261022-3",
+   "date": "2026-10-22",
+   "cat": "Finance d’entreprise",
+   "q": "Quelle raison Carrefour a-t-il donnée pour abaisser ses objectifs 2026 le 21 octobre ?",
+   "a": "La situation sociale et sécuritaire en France",
+   "w": [
+    "La flambée du prix du gazole en Europe",
+    "Une amende de la Commission européenne",
+    "La chute du réal face à l’euro au Brésil"
+   ],
+   "e": "Une cinquantaine de magasins ont été pillés le 17 octobre ; le coût est estimé entre 80 et 200 millions d’euros.",
+   "n": null,
+   "d": 2
+  },
+  {
+   "id": "q20261022-4",
+   "date": "2026-10-22",
+   "cat": "Taux et banques centrales",
+   "q": "Une OAT rapporte 5 % par an et l’inflation française est de 3,1 %. Son rendement réel est d’environ :",
+   "a": "+1,9 point",
+   "w": [
+    "+8,1 points",
+    "−1,9 point",
+    "+3,1 points"
+   ],
+   "e": "Rendement réel ≈ taux nominal − inflation : 5 − 3,1 ≈ 1,9 point. C’est ce que gagne vraiment le prêteur en pouvoir d’achat.",
+   "n": "n1",
+   "d": 3
+  },
+  {
+   "id": "q20261022-5",
+   "date": "2026-10-22",
+   "cat": "Énergie et matières premières",
+   "q": "Qu’est-ce qui a poussé le Brent vers 110 dollars le 22 octobre 2026 au matin ?",
+   "a": "De nouvelles attaques contre des cibles saoudiennes",
+   "w": [
+    "Une baisse surprise des quotas de l’OPEP+",
+    "Une forte hausse des stocks américains de brut",
+    "Une vague de froid précoce en Europe du Nord"
+   ],
+   "e": "Les attaques attribuées aux Houthis ravivent la prime de risque géopolitique intégrée au prix du baril.",
+   "n": "n2",
+   "d": 2
+  },
+  {
+   "id": "q20261021-1",
+   "date": "2026-10-21",
+   "cat": "Marchés",
+   "q": "Netflix a battu les attentes de bénéfice au 3e trimestre 2026, mais son action a reculé. Pourquoi ?",
+   "a": "Ses prévisions pour le trimestre suivant ont déçu",
+   "w": [
+    "Son bénéfice par action a baissé sur un an",
+    "Son chiffre d’affaires a reculé sur un an",
+    "Elle a suspendu ses rachats d’actions"
+   ],
+   "e": "Son bénéfice par action est passé de 0,59 à 0,87 dollar, mais ses prévisions pour le 4e trimestre sont sous le consensus : le marché regarde l’avenir.",
+   "n": null,
+   "d": 2
+  },
+  {
+   "id": "q20261021-2",
+   "date": "2026-10-21",
+   "cat": "Finance d’entreprise",
+   "q": "Schneider émet de nouvelles actions sous le cours, sans droit préférentiel de souscription. Effet pour ses actionnaires ?",
+   "a": "Leur part du capital est diluée",
+   "w": [
+    "Leur part du capital augmente",
+    "Ils reçoivent des actions gratuites",
+    "Leur dividende par action double"
+   ],
+   "e": "Les 25 millions d’actions nouvelles réservées à des investisseurs qualifiés réduisent la part de chaque action existante dans l’entreprise.",
+   "n": null,
+   "d": 3
+  },
+  {
+   "id": "q20261021-3",
+   "date": "2026-10-21",
+   "cat": "Finances publiques",
+   "q": "À quelle date l’Assemblée a-t-elle repoussé le vote de la partie recettes du budget 2027 ?",
+   "a": "Au 27 octobre",
+   "w": [
+    "Au 23 octobre",
+    "Au 3 novembre",
+    "Au 17 décembre"
+   ],
+   "e": "Le vote était prévu le 20 octobre, mais plus de 2 000 amendements restaient à examiner.",
+   "n": "n1",
+   "d": 1
+  },
+  {
+   "id": "q20261021-4",
+   "date": "2026-10-21",
+   "cat": "Taux et banques centrales",
+   "q": "Le 20 octobre 2026, l’écart de taux à 10 ans entre la France et l’Allemagne était proche de :",
+   "a": "1,5 point",
+   "w": [
+    "0,5 point",
+    "1 point",
+    "2,5 points"
+   ],
+   "e": "Il a frôlé 1,55 point en séance : c’est la prime de risque exigée pour prêter à la France plutôt qu’à l’Allemagne.",
+   "n": "n1",
+   "d": 2
+  },
+  {
+   "id": "q20261021-5",
+   "date": "2026-10-21",
+   "cat": "Énergie et matières premières",
+   "q": "Après un plus haut de cinq mois le 20 octobre, qu’est-ce qui a fait reculer le Brent ?",
+   "a": "Des espoirs de pourparlers avec l’Iran",
+   "w": [
+    "Une hausse de production de l’OPEP+",
+    "Une forte hausse des stocks américains",
+    "La réouverture totale du détroit d’Ormuz"
+   ],
+   "e": "Des informations sur de nouvelles discussions proposées par le Qatar et le Pakistan ont réduit la prime de risque géopolitique.",
+   "n": "n2",
+   "d": 2
+  },
+  {
+   "id": "q20261020-1",
+   "date": "2026-10-20",
+   "cat": "Finances publiques",
+   "q": "Moody’s note la France Aa3. Une baisse d’un cran, à A1, l’alignerait sur quelles notes ?",
+   "a": "Celles de Fitch et S&P (A+)",
+   "w": [
+    "Celles de Fitch et S&P (AA−)",
+    "Celle de Fitch seule (A)",
+    "Celles de Fitch et S&P (A−)"
+   ],
+   "e": "Fitch et S&P notent déjà la France A+, l’équivalent du A1 de Moody’s. Le verdict de Moody’s est attendu vendredi 23 octobre.",
+   "n": "n1",
+   "d": 3
+  },
+  {
+   "id": "q20261020-2",
+   "date": "2026-10-20",
+   "cat": "Marchés",
+   "q": "De combien le CAC 40 a-t-il reculé le 19 octobre, après les violences du week-end en France ?",
+   "a": "1,11 %",
+   "w": [
+    "0,28 %",
+    "2,48 %",
+    "3,41 %"
+   ],
+   "e": "L’indice a fini à 7 868,05 points ; les banques ont le plus reculé, jusqu’à −3,4 % pour Société Générale.",
+   "n": "n1",
+   "d": 1
+  },
+  {
+   "id": "q20261020-3",
+   "date": "2026-10-20",
+   "cat": "Énergie et matières premières",
+   "q": "Les Houthis revendiquent des attaques en Arabie saoudite, mais le Brent recule un peu lundi. Pourquoi ?",
+   "a": "Des prises de bénéfices après un plus haut de cinq mois",
+   "w": [
+    "La réouverture complète du détroit d’Ormuz",
+    "Une hausse de production décidée par l’OPEP+",
+    "La levée des sanctions américaines contre l’Iran"
+   ],
+   "e": "Après une forte hausse, certains investisseurs encaissent leurs gains : le Brent a fini à 109,55 dollars (−0,3 %), malgré les tensions.",
+   "n": "n2",
+   "d": 2
+  },
+  {
+   "id": "q20261020-4",
+   "date": "2026-10-20",
+   "cat": "Taux et banques centrales",
+   "q": "Aux États-Unis, le moral des constructeurs de logements est au plus bas depuis 2012. Quelle en est la cause principale ?",
+   "a": "Des taux de crédit immobilier au-dessus de 7 %",
+   "w": [
+    "Une chute du prix du bois de construction",
+    "Une baisse des salaires dans le bâtiment",
+    "Une hausse des taxes fédérales sur le logement"
+   ],
+   "e": "Des crédits plus chers font reculer la demande : 43 % des constructeurs ont baissé leurs prix en octobre.",
+   "n": null,
+   "d": 2
+  },
+  {
+   "id": "q20261020-5",
+   "date": "2026-10-20",
+   "cat": "Gestion de patrimoine",
+   "q": "Vous avez reçu une offre de prêt immobilier à taux fixe. Si Moody’s dégrade la France vendredi, son taux :",
+   "a": "Reste celui de l’offre, valable au moins 30 jours",
+   "w": [
+    "Est relevé automatiquement par la banque",
+    "Augmente d’un écart fixé par la loi",
+    "Suit l’OAT à 10 ans jusqu’à la signature"
+   ],
+   "e": "Une offre de prêt engage la banque pendant au moins 30 jours ; la note de la France n’a pas d’effet automatique sur son taux.",
+   "n": "n1",
+   "d": 2
+  },
+  {
+   "id": "q20261019-1",
+   "date": "2026-10-19",
+   "cat": "Énergie et matières premières",
+   "q": "Le 16 octobre, le Brent a brièvement atteint un niveau inédit depuis mai. Lequel ?",
+   "a": "110 dollars le baril",
+   "w": [
+    "95 dollars le baril",
+    "120 dollars le baril",
+    "130 dollars le baril"
+   ],
+   "e": "Les attaques contre des pétroliers près d’Ormuz ont poussé le Brent jusqu’à 110 dollars, avant un léger repli lundi.",
+   "n": "n2",
+   "d": 1
+  },
+  {
+   "id": "q20261019-2",
+   "date": "2026-10-19",
+   "cat": "Géopolitique",
+   "q": "Pourquoi la levée de sanctions américaines contre la Russie a-t-elle fait reculer le pétrole lundi ?",
+   "a": "Elle laisse espérer davantage de carburants russes",
+   "w": [
+    "Elle réduit la consommation de pétrole des États-Unis",
+    "Elle met fin au blocus américain des ports iraniens",
+    "Elle oblige l’OPEP+ à augmenter sa production"
+   ],
+   "e": "Plus d’offre potentielle sur le marché tend à faire baisser les prix ; Washington autorise notamment l’import de gazole russe.",
+   "n": null,
+   "d": 2
+  },
+  {
+   "id": "q20261019-3",
+   "date": "2026-10-19",
+   "cat": "Économie",
+   "q": "Quelle croissance sur un an la Chine a-t-elle annoncée pour le troisième trimestre 2026 ?",
+   "a": "4,5 %",
+   "w": [
+    "4,3 %",
+    "5,2 %",
+    "3,8 %"
+   ],
+   "e": "Un peu mieux que les 4,4 % attendus et que les 4,3 % du deuxième trimestre, grâce surtout aux exportations.",
+   "n": "n10",
+   "d": 1
+  },
+  {
+   "id": "q20261019-4",
+   "date": "2026-10-19",
+   "cat": "Marchés",
+   "q": "Les obligations de CoreWeave rapportent désormais 14 à 16 %. Que signale un rendement aussi élevé ?",
+   "a": "Un risque de défaut jugé élevé",
+   "w": [
+    "Une forte confiance dans ses profits",
+    "Une baisse imminente des taux de la Fed",
+    "Une demande record pour ses obligations"
+   ],
+   "e": "Quand les investisseurs doutent d’être remboursés, ils vendent l’obligation : son prix baisse et son rendement grimpe.",
+   "n": null,
+   "d": 2
+  },
+  {
+   "id": "q20261019-5",
+   "date": "2026-10-19",
+   "cat": "Gestion de patrimoine",
+   "q": "Quelle source a le plus alimenté l’épargne salariale au premier semestre 2026 ?",
+   "a": "L’intéressement",
+   "w": [
+    "La participation",
+    "L’abondement de l’employeur",
+    "Les versements volontaires"
+   ],
+   "e": "Selon l’AFG, l’intéressement a apporté 6,7 milliards d’euros, devant la participation (5,2) et l’abondement (3).",
+   "n": "n12",
+   "d": 3
+  },
+  {
+   "id": "q1",
+   "date": "2026-10-18",
+   "cat": "Énergie et matières premières",
+   "q": "Pourquoi le pétrole a-t-il dépassé 100 dollars le baril mi-octobre 2026 ?",
+   "a": "Des frappes contre des pétroliers près d’Ormuz",
+   "w": [
+    "Une baisse surprise des quotas de l’OPEP+",
+    "Un hiver annoncé très froid en Europe",
+    "Une chute des stocks américains de brut"
+   ],
+   "e": "Les frappes iraniennes contre des pétroliers ont fait chuter les flux dans le détroit d’Ormuz, par où passe environ un cinquième du pétrole mondial.",
+   "n": "n2",
+   "d": 1
+  },
+  {
+   "id": "q2",
+   "date": "2026-10-18",
+   "cat": "Taux et banques centrales",
+   "q": "Quel est le taux de dépôt de la BCE après sa hausse de septembre 2026 ?",
+   "a": "2,50 %",
+   "w": [
+    "2,25 %",
+    "2,75 %",
+    "2,00 %"
+   ],
+   "e": "Deuxième hausse de 2026, après celle de juin, pour contenir l’inflation tirée par l’énergie.",
+   "n": "n11",
+   "d": 1
+  },
+  {
+   "id": "q3",
+   "date": "2026-10-18",
+   "cat": "Finance d’entreprise",
+   "q": "Pourquoi l’action LVMH a-t-elle reculé malgré un chiffre d’affaires en légère hausse ?",
+   "a": "Sa mode et maroquinerie a reculé plus que prévu",
+   "w": [
+    "Ses ventes de vins et spiritueux ont chuté",
+    "Elle a réduit son dividende intermédiaire",
+    "Ses marges ont baissé à cause de l’euro faible"
+   ],
+   "e": "Le marché juge par rapport aux attentes : la division phare a déçu, à cause d’une demande chinoise plus faible.",
+   "n": null,
+   "d": 2
+  },
+  {
+   "id": "q4",
+   "date": "2026-10-18",
+   "cat": "Gestion de patrimoine",
+   "q": "Avec une inflation d’environ 3 %, que rapporte en réalité un Livret A à 1,7 % ?",
+   "a": "Un rendement réel d’environ −1,3 point",
+   "w": [
+    "Un rendement réel d’environ +1,3 point",
+    "Un rendement réel d’environ +4,7 points",
+    "Un rendement réel d’environ −4,7 points"
+   ],
+   "e": "Rendement réel ≈ taux nominal − inflation : 1,7 − 3 ≈ −1,3. L’épargne perd du pouvoir d’achat.",
+   "n": null,
+   "d": 2
+  },
+  {
+   "id": "q5",
+   "date": "2026-10-18",
+   "cat": "Géopolitique",
+   "q": "Entre quels pays se situe le détroit d’Ormuz ?",
+   "a": "L’Iran et Oman",
+   "w": [
+    "L’Arabie saoudite et le Yémen",
+    "L’Iran et l’Irak",
+    "Le Qatar et les Émirats"
+   ],
+   "e": "Le détroit relie le golfe Persique à la mer d’Oman. C’est le principal « point d’étranglement » pétrolier du monde.",
+   "n": "n2",
+   "d": 2
+  },
+  {
+   "id": "q6",
+   "date": "2026-10-17",
+   "cat": "Taux et banques centrales",
+   "q": "Qui préside la Réserve fédérale américaine en octobre 2026 ?",
+   "a": "Kevin Warsh",
+   "w": [
+    "Jerome Powell",
+    "Christopher Waller",
+    "Kevin Hassett"
+   ],
+   "e": "Kevin Warsh n’a donné aucune indication sur la réunion du 28 octobre.",
+   "n": "n9",
+   "d": 1
+  },
+  {
+   "id": "q7",
+   "date": "2026-10-17",
+   "cat": "Taux et banques centrales",
+   "q": "Que prévoient majoritairement les marchés pour la réunion de la Fed du 28 octobre ?",
+   "a": "Un statu quo des taux",
+   "w": [
+    "Une baisse de 0,25 point",
+    "Une hausse de 0,25 point",
+    "Une baisse de 0,5 point"
+   ],
+   "e": "Selon l’outil FedWatch, les marchés misent sur un statu quo en octobre, puis sur une hausse probable en décembre.",
+   "n": "n9",
+   "d": 2
+  },
+  {
+   "id": "q8",
+   "date": "2026-10-17",
+   "cat": "Économie",
+   "q": "Pourquoi l’inflation sous-jacente américaine (2,6 %) est-elle surveillée de près ?",
+   "a": "Elle exclut énergie et alimentation",
+   "w": [
+    "Elle inclut les prix de l’immobilier ancien",
+    "Elle mesure les seuls prix des services",
+    "Elle ne concerne que les produits importés"
+   ],
+   "e": "Les prix volatils sont exclus : si l’indicateur monte, la hausse touche le reste de l’économie, ce qui pousse à monter les taux.",
+   "n": "n9",
+   "d": 3
+  },
+  {
+   "id": "q9",
+   "date": "2026-10-17",
+   "cat": "Marchés",
+   "q": "Combien le CAC 40 a-t-il gagné sur la semaine du 12 au 16 octobre 2026 ?",
+   "a": "Près de 2 %",
+   "w": [
+    "Près de 5 %",
+    "Près de 0,5 %",
+    "Il a perdu près de 2 %"
+   ],
+   "e": "+1,97 % sur la semaine, sa meilleure semaine depuis début août.",
+   "n": null,
+   "d": 2
+  },
+  {
+   "id": "q10",
+   "date": "2026-10-16",
+   "cat": "Finance d’entreprise",
+   "q": "Schneider Electric publie des ventes record, mais l’action recule. Pourquoi ?",
+   "a": "Les bons chiffres étaient déjà dans le cours",
+   "w": [
+    "Ses marges ont baissé malgré les ventes",
+    "Elle a abaissé ses objectifs de l’année",
+    "Le secteur a été pénalisé par les taux"
+   ],
+   "e": "Quand un titre est très valorisé, il faut battre les attentes, pas seulement publier de bons chiffres.",
+   "n": null,
+   "d": 2
+  },
+  {
+   "id": "q11",
+   "date": "2026-10-16",
+   "cat": "Marchés",
+   "q": "L’euro monte face au dollar. Pour un investisseur européen qui détient des actions américaines, cela :",
+   "a": "Réduit la valeur en euros de ses actions américaines",
+   "w": [
+    "Augmente la valeur en euros de ses actions américaines",
+    "N’a aucun effet, car ses actions sont cotées en dollars",
+    "Augmente les dividendes en dollars qu’il perçoit"
+   ],
+   "e": "Ses actions valent autant de dollars, mais chaque dollar vaut moins d’euros : c’est le risque de change.",
+   "n": null,
+   "d": 2
+  },
+  {
+   "id": "q12",
+   "date": "2026-10-16",
+   "cat": "Énergie et matières premières",
+   "q": "Quel secteur est habituellement pénalisé par un baril cher ?",
+   "a": "Les compagnies aériennes",
+   "w": [
+    "Les compagnies pétrolières",
+    "Les armateurs de pétroliers",
+    "Les sociétés de services pétroliers"
+   ],
+   "e": "Le kérosène est l’un de leurs premiers coûts ; les pétroliers, eux, profitent de prix élevés.",
+   "n": "n2",
+   "d": 1
+  },
+  {
+   "id": "q13",
+   "date": "2026-10-15",
+   "cat": "Économie",
+   "q": "Quelle a été l’inflation de la zone euro en septembre 2026, selon Eurostat ?",
+   "a": "3,8 %",
+   "w": [
+    "2,8 %",
+    "3,1 %",
+    "4,6 %"
+   ],
+   "e": "Plus haut depuis trois ans, après 3,2 % en août.",
+   "n": "n11",
+   "d": 1
+  },
+  {
+   "id": "q14",
+   "date": "2026-10-15",
+   "cat": "Économie",
+   "q": "Quelle composante a le plus tiré l’inflation de la zone euro en septembre ?",
+   "a": "L’énergie",
+   "w": [
+    "L’alimentation",
+    "Les services",
+    "Les biens industriels"
+   ],
+   "e": "Le choc pétrolier se diffuse d’abord par l’énergie ; l’inflation sous-jacente reste plus contenue à 2,5 %.",
+   "n": "n11",
+   "d": 2
+  },
+  {
+   "id": "q15",
+   "date": "2026-10-15",
+   "cat": "Économie",
+   "q": "Inflation française de septembre 2026, selon le chiffre définitif de l’Insee ?",
+   "a": "3,1 %",
+   "w": [
+    "2,6 %",
+    "3,8 %",
+    "3,5 %"
+   ],
+   "e": "3,1 % sur un an (3,4 % en indice harmonisé), avec une énergie en hausse de 21,3 %.",
+   "n": null,
+   "d": 2
+  },
+  {
+   "id": "q16",
+   "date": "2026-10-14",
+   "cat": "Finances publiques",
+   "q": "Quel déficit public vise le projet de budget 2027 de la France ?",
+   "a": "5,0 % du PIB",
+   "w": [
+    "4,5 % du PIB",
+    "5,4 % du PIB",
+    "3,0 % du PIB"
+   ],
+   "e": "Après 5,4 % attendu en 2026, grâce à plusieurs dizaines de milliards d’euros d’économies et de nouvelles recettes.",
+   "n": "n1",
+   "d": 2
+  },
+  {
+   "id": "q17",
+   "date": "2026-10-14",
+   "cat": "Finances publiques",
+   "q": "Le taux d’emprunt à 10 ans de la France a approché 4,9 %. C’est son plus haut depuis :",
+   "a": "2002",
+   "w": [
+    "2011",
+    "2008",
+    "2023"
+   ],
+   "e": "Des taux plus élevés pour l’État renchérissent aussi le crédit immobilier.",
+   "n": "n1",
+   "d": 2
+  },
+  {
+   "id": "q18",
+   "date": "2026-10-14",
+   "cat": "Économie",
+   "q": "Si le taux payé sur la dette dépasse la croissance nominale, la dette rapportée au PIB tend à :",
+   "a": "Augmenter",
+   "w": [
+    "Diminuer",
+    "Rester stable",
+    "Baisser si l’inflation monte"
+   ],
+   "e": "C’est l’effet « r − g », ou boule de neige de la dette.",
+   "n": "n1",
+   "d": 2
+  },
+  {
+   "id": "q19",
+   "date": "2026-10-13",
+   "cat": "Finance d’entreprise",
+   "q": "Quel marché explique en grande partie la faiblesse récente du luxe ?",
+   "a": "La Chine",
+   "w": [
+    "Les États-Unis",
+    "Le Japon",
+    "Le Moyen-Orient"
+   ],
+   "e": "La demande chinoise plus faible a pesé sur la mode et la maroquinerie de LVMH.",
+   "n": null,
+   "d": 1
+  },
+  {
+   "id": "q20",
+   "date": "2026-10-13",
+   "cat": "Gestion de patrimoine",
+   "q": "Quel livret rapporte 2,5 % en 2026, sous conditions de revenus ?",
+   "a": "Le LEP",
+   "w": [
+    "Le LDDS",
+    "Le Livret A",
+    "Le Livret jeune"
+   ],
+   "e": "Le gouvernement a choisi de ne pas l’abaisser à 2,2 % comme le prévoyait la formule.",
+   "n": null,
+   "d": 1
+  },
+  {
+   "id": "q21",
+   "date": "2026-10-13",
+   "cat": "Gestion de patrimoine",
+   "q": "Quel est le taux du Livret A depuis le 1er août 2026 ?",
+   "a": "1,7 %",
+   "w": [
+    "2,4 %",
+    "1,5 %",
+    "2 %"
+   ],
+   "e": "Il est passé de 1,5 % à 1,7 %.",
+   "n": null,
+   "d": 1
+  },
+  {
+   "id": "q22",
+   "date": "2026-10-12",
+   "cat": "Taux et banques centrales",
+   "q": "Quand les taux d’intérêt montent, le prix des obligations déjà émises tend à :",
+   "a": "Baisser",
+   "w": [
+    "Monter",
+    "Ne pas bouger",
+    "Monter, puis revenir au nominal"
+   ],
+   "e": "Leurs coupons fixes deviennent moins attractifs que ceux des nouvelles obligations.",
+   "n": "n11",
+   "d": 1
+  },
+  {
+   "id": "q23",
+   "date": "2026-10-12",
+   "cat": "Géopolitique",
+   "q": "Quelles cibles ont visé des attaques de drones ukrainiens, réduisant l’offre de carburants ?",
+   "a": "Des raffineries russes",
+   "w": [
+    "Des terminaux gaziers russes",
+    "Des pétroliers en mer Noire",
+    "Des oléoducs vers l’Europe"
+   ],
+   "e": "Moins de raffinage signifie moins de carburants disponibles, ce qui soutient les prix.",
+   "n": null,
+   "d": 2
+  },
+  {
+   "id": "q24",
+   "date": "2026-10-12",
+   "cat": "Énergie et matières premières",
+   "q": "Début octobre 2026, de combien les flux de pétrole dans le détroit d’Ormuz avaient-ils chuté ?",
+   "a": "D’environ 17 à 12 millions de barils par jour",
+   "w": [
+    "D’environ 17 à 15 millions de barils par jour",
+    "D’environ 17 à 6 millions de barils par jour",
+    "D’environ 12 à 10 millions de barils par jour"
+   ],
+   "e": "Une baisse d’environ un tiers des flux habituels.",
+   "n": "n2",
+   "d": 3
+  }
+ ]
+}
