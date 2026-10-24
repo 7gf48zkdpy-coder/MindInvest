@@ -1,0 +1,7 @@
+.netlify
+# créés par build.js à la mise en ligne
+/index.html
+/cours.json
+/amf.json
+/icons.json
+/*.png
