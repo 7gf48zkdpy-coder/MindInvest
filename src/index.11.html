@@ -1,0 +1,100 @@
+(v)+'.',2)}],
+ m05l4:[function(){var m=rch([5,8,10,12,15]),r=rch([0.5,0.8,1,1.2]),l=rch([1.5,2,2.5,3]),v=m*r*l;return pq('m05l4','dup','Marge nette '+m+' %, rotation des actifs '+n1(r)+', levier '+n1(l)+'. ROE ?',v,[m*r,m+r+l,m*l],fP1,'ROE = '+m+' % × '+n1(r)+' × '+n1(l)+' = '+fP1(v)+'.',2)},
+  function(){var RN=rnd(10,120,5),CP=rnd(100,800,50),v=RN/CP*100;return pq('m05l4','roe','Résultat net '+RN+' M€, capitaux propres '+CP+' M€. ROE ?',v,[CP/RN,v/2,v*2],fP1,RN+' ÷ '+CP+' = '+fP1(v)+'.',1)}],
+ m05l5:[function(){var E=rnd(100,600,50),k=rch([0.5,1,1.5,2,2.5,3,4]),D=E*k;return pq('m05l5','lev','Dette nette '+n0(D)+' M€, EBITDA '+E+' M€. Ratio dette nette / EBITDA ?',k,[E/D,k*2,k+1],function(x){return n1(x)+' fois'},n0(D)+' ÷ '+E+' = '+n1(k)+'.',1)},
+  function(){var D=rch([200,500,800,1000,2000]),a=rch([1,1.5,2,2.5]),b=a+rch([1,2,3]),v=D*(b-a)/100;return pq('m05l5','ref','Une entreprise refinance '+n0(D)+' M€ de dette de '+n1(a)+' % à '+n1(b)+' %. Surcoût annuel ?',v,[D*b/100,D*a/100,v*10],fMe,n0(D)+' × ('+n1(b)+' − '+n1(a)+') % = '+fMe(v)+'.',2)}],
+ m05l9:[function(){var g=rch([5,8,10,12,15,20,25]),PER=rch([10,15,20,25,30,40]),v=PER/g;return pq('m05l9','peg','PER de '+PER+', croissance des bénéfices de '+g+' % par an. PEG ?',v,[g/PER,PER*g/100,v*2],fN2,'PEG = '+PER+' ÷ '+g+' = '+n2(v)+'.',2)},
+  function(){var Cp=rnd(300,2000,100),D=rnd(0,800,100),E=rnd(40,150,10),v=(Cp+D)/E;return pq('m05l9','ve','Capitalisation '+Cp+' M€, dette nette '+D+' M€, EBITDA '+E+' M€. VE/EBITDA ?',v,[Cp/E,(Cp-D)/E,E/(Cp+D)*10],fN1,'VE = '+Cp+' + '+D+' = '+(Cp+D)+' M€ ; ÷ '+E+' = '+n1(v)+'.',2)}],
+ m05l10:[function(){var F=rch([100,500,1000,5000]),r=rch([4,5,6,8,10]),n=rch([3,5,8,10]),v=F/Math.pow(1+r/100,n);return pq('m05l10','va','Valeur actuelle de '+eur0(F)+' reçus dans '+n+' ans, au taux de '+r+' % ?',v,[F*(1-r/100*n),F*Math.pow(1+r/100,n),F/(1+r/100)],fE0,eur0(F)+' ÷ '+n2(1+r/100)+'^'+n+' = '+eur0(F)+' ÷ '+n2(Math.pow(1+r/100,n))+' ≈ '+eur0(v)+'.',3)},
+  function(){var F=rch([5,8,10,12,20]),r=rch([7,8,9,10]),g=rch([1,2,3]),v=F/((r-g)/100);return pq('m05l10','gor','Flux de '+F+' M€ l’an prochain, rendement exigé '+r+' %, croissance perpétuelle '+g+' %. Valeur selon Gordon ?',v,[F/(r/100),F/((r+g)/100),F*(r-g)],function(x){return nf1.format(x)+' M€'},F+' ÷ ('+r+' % − '+g+' %) = '+F+' ÷ '+n2((r-g)/100)+' = '+nf1.format(v)+' M€.',3)}],
+ m05l11:[function(){var V=rch([40,50,60,80,100,120]),m=rch([20,25,30,40,50]),v=V*(1-m/100);return pq('m05l11','px','Valeur estimée '+eur0(V)+', marge de sécurité exigée '+m+' %. Prix d’achat maximum ?',v,[V*m/100,V/(1+m/100),V-m],fE2,eur0(V)+' × (1 − '+m+' %) = '+eur(v)+'.',1)}],
+ m06l6:'FX',m13l6:'FX',
+ m06l7:[function(){var L=rnd(2,20,1),V=L*rch([15,20,25,30]),v=L/V*100;return pq('m06l7','rdt','Loyers annuels '+L+' M€, valeur de l’immeuble '+V+' M€. Rendement locatif brut ?',v,[V/L,v*2,v/2],fP2,L+' ÷ '+V+' = '+fP2(v)+'.',1)}],
+ m06l9:'POCHE',m07l8:'POCHE',
+ m07l2:[function(){var K=rnd(10000,200000,5000),p=rch([30,40,50,60,70,80]),v=K*p/100;return pq('m07l2','alloc','Portefeuille de '+eur0(K)+' avec '+p+' % d’actions. Montant en actions ?',v,[K*(100-p)/100,K/p,v/10],fE0,eur0(K)+' × '+p+' % = '+eur0(v)+'.',1)},
+  function(){var K=rnd(200000,1500000,50000),v=K*0.04;return pq('m07l2','r4','Selon la règle des 4 %, quel retrait annuel initial permet un capital de '+eur0(K)+' ?',v,[K*0.4/10,K*0.07,v/12],fE0,eur0(K)+' × 4 % = '+eur0(v)+'.',1)}],
+ m07l4:[function(){var A=rnd(30,90,2)*1000,O=rnd(10,60,2)*1000,c=rch([50,60,70,80]),T=A+O,tgt=T*c/100,v=A-tgt;if(Math.abs(v)<1000){A+=6000;T=A+O;tgt=T*c/100;v=A-tgt}return pq('m07l4','reb','Actions '+eur0(A)+', obligations '+eur0(O)+', cible '+c+' % actions. Montant d’actions à vendre (ou à acheter si négatif) ?',v,[A-c*1000,T*c/100,v/2],function(x){return (x<0?'acheter ':'vendre ')+eur0(Math.abs(x))},'Total '+eur0(T)+'. Cible actions = '+eur0(T)+' × '+c+' % = '+eur0(tgt)+'. Écart : '+eur0(A)+' − '+eur0(tgt)+' = '+eur0(v)+'.',3)}],
+ m07l5:[function(){var M=rch([100,150,200,300]),ps=[rnd(10,40,1),rnd(10,40,1),rnd(10,40,1)],u=ps.reduce(function(a,p){return a+M/p},0),v=3*M/u;return pq('m07l5','dca',eur0(M)+' investis trois fois, aux prix de '+ps.map(function(p){return eur0(p)}).join(', ')+'. Prix moyen d’achat ?',v,[(ps[0]+ps[1]+ps[2])/3,Math.min.apply(null,ps),Math.max.apply(null,ps)],fE2,'Parts : '+ps.map(function(p){return n2(M/p)}).join(' + ')+' = '+n2(u)+'. Prix moyen = '+eur0(3*M)+' ÷ '+n2(u)+' = '+eur(v)+'.',3)}],
+ m07l7:[function(){var r=rch([3,5,7,8,10,12]),n=rch([3,5,8,10]),V0=rch([1000,5000,10000]),V1=Math.round(V0*Math.pow(1+r/100,n));return pq('m07l7','cagr',eur0(V0)+' deviennent '+eur0(V1)+' en '+n+' ans. Rendement annualisé ?',r,[(V1/V0-1)*100/n,(V1/V0-1)*100,r*1.5],fP1,'('+eur0(V1)+' ÷ '+eur0(V0)+')^(1/'+n+') − 1 ≈ '+fP1(r)+'.',3)},
+  function(){var R=rch([5,6,7,8,9,10,12]),f=rch([1,2,3]),s=rch([8,10,12,15,20]),v=(R-f)/s;return pq('m07l7','sh','Rendement '+R+' %, taux sans risque '+f+' %, volatilité '+s+' %. Ratio de Sharpe ?',v,[R/s,(R+f)/s,s/(R-f)],fN2,'('+R+' − '+f+') ÷ '+s+' = '+n2(v)+'.',2)}],
+ m08l9:[function(){var C=rch([500,1000,2000,5000]),L=rch([2,5,10,20]),b=rch([5,10,20]),v=C*L*b/100;return pq('m08l9','lev','Capital de '+eur0(C)+' avec un levier de '+L+'. Le marché baisse de '+b+' %. Perte ?',Math.min(v,C)===v?v:C,[C*b/100,C*L,v/2],fE0,'Exposition = '+eur0(C)+' × '+L+' = '+eur0(C*L)+'. Perte = '+eur0(C*L)+' × '+b+' % = '+eur0(v)+(v>=C?' : tout le capital est perdu.':'.'),2)}],
+ m11l1:[function(){var P=rch([1000,2000,2500,3000]),g=rch([3,4,5,6]),i=rch([1,2]),P2=P*(1+g/100),v=g-i;return pq('m11l1','pib','Le PIB nominal passe de '+n0(P)+' à '+n0(P2)+' milliards, avec '+i+' % d’inflation. Croissance réelle ?',v,[g,g+i,(P2-P)/P2*100],fP1,'Nominale : ('+n0(P2)+' − '+n0(P)+') ÷ '+n0(P)+' = '+g+' %. Réelle ≈ '+g+' − '+i+' = '+fP1(v)+'.',2)}],
+ m11l5:[function(){var i=rch([3,4,5,6]),p=rch([1,2]),v=((1+i/100)/(1+p/100)-1)*100;return pq('m11l5','fis','Taux nominal '+i+' %, inflation '+p+' %. Taux réel exact ?',v,[i-p+0.3,(i-p)*1.2,i/p],fP2,'(1 + '+i+' %) ÷ (1 + '+p+' %) − 1 = '+n2(1+i/100)+' ÷ '+n2(1+p/100)+' − 1 = '+fP2(v)+'.',3)}],
+ m11l6:[function(){var n=rch([0.5,1,1.5]),p=rch([1,2,3,4,5]),c=2,y=rch([-2,-1,0,1,2]),v=n+p+0.5*(p-c)+0.5*y;return pq('m11l6','tay','Taux neutre '+n1(n)+' %, inflation '+p+' %, cible 2 %, écart de production '+sg(y)+' %. Taux de Taylor ?',v,[n+p,n+p+(p-c)+y,v+1],fP1,n1(n)+' + '+p+' + 0,5 × ('+p+' − 2) + 0,5 × ('+y+') = '+fP1(v)+'.',3)}],
+ m13l8:[function(){var P=rch([20,50,80,100,250]),d=rch([10,15,20,25,50]),v=P*(1+d/100);return pq('m13l8','dd','Produit importé à '+eur0(P)+', droit de douane de '+d+' %. Nouveau coût ?',v,[P*d/100,P/(1-d/100),P+d],fE2,eur0(P)+' × (1 + '+d+' %) = '+eur(v)+'.',1)}]
+};
+var PG_SHARED={
+ RECOV:function(lid){var L=rch([10,20,25,30,40,50,60,75,80,90]),v=L/(100-L)*100;return pq(lid,'recov','Après une perte de '+L+' %, quelle hausse faut-il pour revenir au point de départ ?',v,[L,L*1.5,L/2],function(x){return '+'+nf0.format(Math.round(x))+' %'},'Hausse = perte ÷ (1 − perte) = '+n2(L/100)+' ÷ '+n2(1-L/100)+' = +'+nf0.format(Math.round(v))+' %.',2)},
+ FX:function(lid){var a=rch([-10,-5,5,8,10,15,20]),f=rch([-10,-8,-5,5,8,10]),v=((1+a/100)*(1+f/100)-1)*100;return pq(lid,'fx','Tes actions américaines font '+sg(a)+' % en dollars et le dollar varie de '+sg(f)+' % face à l’euro. Résultat en euros ?',v,[a,a-f,(a+f)*1.5],function(x){return (x>=0?'+':'−')+nf1.format(Math.abs(x))+' %'},n2(1+a/100)+' × '+n2(1+f/100)+' = '+n2(1+v/100)+', soit '+(v>=0?'+':'')+n1(v)+' %.',2)},
+ POCHE:function(lid){var w=rch([2,5,10,15,20]),c=rch([-90,-80,-50,-30,30,50,100]),v=w*c/100;return pq(lid,'poche','Une poche de '+w+' % du portefeuille varie de '+sg(c)+' %. Effet sur le total ?',v,[c,w,c/w],function(x){return (x>=0?'+':'−')+nf1.format(Math.abs(x))+' %'},'Effet = '+w+' % × '+sg(c)+' % = '+(v>=0?'+':'')+n1(v)+' %.',1)}
+};
+function pgFns(lid){var g=PGEN[lid];if(!g)return [];if(typeof g==='string')return [function(){return PG_SHARED[g](lid)}];return g}
+function pgMake(lid,n,seen){var fs=pgFns(lid),out=[],tries=0;seen=seen||{};while(out.length<n&&fs.length&&tries<n*8){tries++;var q;try{q=rch(fs)()}catch(e){continue}if(!q||q.opts.length<4||seen[q.sig])continue;seen[q.sig]=1;out.push(q)}return out}
+function addParam(out,lids,share){var n=Math.round(out.length*share),cand=lids.filter(function(l){return pgFns(l).length});if(!n||!cand.length)return out;
+  var made=[],seen={},k=0;while(made.length<n&&k<n*4){var got=pgMake(cand[k%cand.length],1,seen);if(got.length)made.push(got[0]);k++}
+  var keep=out.slice(),drop=made.length;for(var i=keep.length-1;i>=0&&drop>0;i--){var s=keep[i].sig;if(s.indexOf('#')>0&&s.indexOf('mx:')!==0&&!keep[i].param){keep.splice(i,1);drop--}}
+  return keep.concat(made)}
+
+/* ---------- variant form: answer shown, find the question ---------- */
+function reverseQ(l,qi){var b=l.quiz[qi];if(!b||String(b.a).length>45||b.q.length>110||/^\d|^(Vrai|Faux|Oui|Non)\b/i.test(b.a))return null;
+  var others=shuffle(l.quiz.map(function(x,i){return i}).filter(function(i){var o=l.quiz[i];return i!==qi&&o.q.length<=110&&o.a!==b.a&&o.w.indexOf(b.a)<0}));if(others.length<3)return null;
+  var opts=[{t:b.q,ok:1}].concat(others.slice(0,3).map(function(i){return {t:l.quiz[i].q,ok:0}}));
+  return {sig:l.id+'#'+qi,q:'« '+b.a+' » est la bonne réponse à quelle question ?',opts:shuffle(opts),explain:b.q+' → '+b.a+'. '+b.e,lesson:l.id,d:Math.min(3,(b.d||1)+1),rev:1}}
+
+/* ---------- practice mode: unlimited questions with immediate step-by-step correction ---------- */
+var DRILL=null;
+function drillLids(lid){var l=LX[lid];if(!l)return [];var a=pgFns(lid).length?[lid]:[];if(!a.length)l.mod.lessons.forEach(function(x){if(pgFns(x.id).length)a.push(x.id)});return a}
+function drillStart(lid){var ids=drillLids(lid);if(!ids.length){toast('Pas d’exercices de calcul pour cette leçon');return}DRILL={lid:lid,ids:ids,ok:0,n:0,streak:0,seen:{}};drillNext()}
+function drillNext(){var d=DRILL;if(!d)return;var q=pgMake(rch(d.ids),1,d.seen)[0]||pgMake(rch(d.ids),1,{})[0];if(!q){toast('Plus d’exercice disponible');return}d.q=q;d.sel=-1;
+  var l=LX[d.lid];S.drill=S.drill||{};var mastered=S.drill[d.lid];
+  sheet('<div class="sheet-top"><span class="k">Entraînement · '+esc(l?l.title:'')+'</span><button class="xbtn" data-close="1" aria-label="Fermer">✕</button></div>'+
+   '<div class="row"><span class="note">Série : <b class="num" style="color:var(--text)">'+d.streak+' / 5</b> '+(mastered?'· notion acquise ✓':'')+'</span><span class="note num">'+d.ok+' juste'+(d.ok>1?'s':'')+' sur '+d.n+'</span></div><div class="bar"><i style="width:'+Math.min(100,d.streak/5*100)+'%"></i></div>'+
+   '<h2 class="q-title">'+esc(q.q)+'</h2><div style="display:flex;flex-direction:column;gap:10px" role="group" aria-label="Réponses">'+q.opts.map(function(o,i){return '<button class="opt" data-dopt="'+i+'" aria-pressed="false"><span class="lt">'+'ABCD'[i]+'</span>'+(o.s?'<span class="mxo"><small>'+esc(o.s)+'</small><b>'+esc(o.v)+'</b></span>':'<span>'+esc(o.t)+'</span>')+'</button>'}).join('')+'</div>'+
+   '<div id="drFb"></div><button class="btn" id="drGo" disabled>Vérifier</button><p class="note">Pas de chrono ni de points : de nouveaux chiffres à chaque question. 5 bonnes réponses d’affilée = notion acquise.</p>');
+  document.querySelectorAll('[data-dopt]').forEach(function(b){b.addEventListener('click',function(){if(d.done)return;d.sel=+b.dataset.dopt;document.querySelectorAll('[data-dopt]').forEach(function(x){x.setAttribute('aria-pressed',String(x===b))});$('#drGo').disabled=false})});
+  d.done=false;$('#drGo').addEventListener('click',function(){if(d.done){drillNext();return}if(d.sel<0)return;d.done=true;var ok=!!q.opts[d.sel].ok;d.n++;if(ok){d.ok++;d.streak++;goalAdd(1,0)}else d.streak=0;
+    if(d.streak>=5&&!S.drill[d.lid]){S.drill[d.lid]=now();addXP(50);save();toast('Notion acquise')}
+    document.querySelectorAll('[data-dopt]').forEach(function(x,i){if(q.opts[i].ok)x.classList.add('right');else if(i===d.sel)x.classList.add('wrong')});
+    $('#drFb').innerHTML='<div class="fbk '+(ok?'ok':'ko')+'"><b>'+(ok?'Juste !':'Pas tout à fait.')+'</b><div>'+esc(q.explain)+'</div></div>';$('#drGo').textContent='Question suivante';save()})}
+/* ---------- navigation ---------- */
+var TABS=[
+ ['accueil','Accueil','<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>'],
+ ['apprendre','Cours','<path d="M4 5a2 2 0 0 1 2-2h14v16H6a2 2 0 0 0-2 2z"/><path d="M4 21V5"/>'],
+ ['actus','Actus','<rect x="3" y="4" width="14" height="16" rx="2"/><path d="M17 8h3a1 1 0 0 1 1 1v9a2 2 0 0 1-4 0M7 8h6M7 12h6M7 16h4"/>'],
+ ['outils','Outils','<rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/>']
+];
+var tab='accueil', mcat='Mes valeurs', openAsset=null;
+try{var lt=localStorage.getItem(KEY+'-tab');if(['accueil','apprendre','actus','outils'].indexOf(lt)>=0)tab=lt}catch(e){}
+function renderTabs(){
+  $('#tabs').innerHTML=TABS.map(function(t){return '<button class="tab" data-tab="'+t[0]+'"'+(tab===t[0]?' aria-current="page"':'')+'><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+t[2]+'</svg>'+t[1]+'</button>'}).join('');
+}
+$('#tabs').addEventListener('click',function(e){var b=e.target.closest('[data-tab]');if(!b)return;tab=b.dataset.tab;try{localStorage.setItem(KEY+'-tab',tab)}catch(er){}render();window.scrollTo(0,0)});
+
+function toast(msg){var t=document.createElement('div');t.className='toast';t.textContent=msg;document.body.appendChild(t);setTimeout(function(){t.remove()},2600)}
+function sheet(html){var gp0=document.getElementById('glpop');if(gp0)gp0.remove();$('#layer').innerHTML='<div class="sheet-wrap" data-close="1"><div class="sheet" role="dialog" aria-modal="true"><div class="grab"></div>'+html+'</div></div>'}
+function closeSheet(){if(typeof stopTimer==='function')stopTimer();if(typeof CHAT!=='undefined'&&CHAT.unsub){CHAT.unsub();CHAT.unsub=null}if(typeof ttsStop==='function')ttsStop();var gp=document.getElementById('glpop');if(gp)gp.remove();$('#layer').innerHTML='';openAsset=null;quizState=null;if(!S.onb&&(ACC.state==='ok'||ACC.state==='off'||ACC.state==='local'))setTimeout(function(){onboard()},0)}
+$('#layer').addEventListener('click',function(e){if(e.target.dataset&&e.target.dataset.close)closeSheet()});
+
+/* ---------- screens ---------- */
+function ring(p,size,sw,inner,color){var r=(size-sw)/2,c=2*Math.PI*r,o=c*(1-Math.max(0,Math.min(1,p)));
+  return '<span class="ringwrap"><svg class="ring" width="'+size+'" height="'+size+'" viewBox="0 0 '+size+' '+size+'" aria-hidden="true"><circle class="trk" cx="'+size/2+'" cy="'+size/2+'" r="'+r+'" fill="none" stroke-width="'+sw+'"/><circle class="arc" cx="'+size/2+'" cy="'+size/2+'" r="'+r+'" fill="none" stroke-width="'+sw+'" stroke-linecap="round" stroke-dasharray="'+c.toFixed(2)+'" stroke-dashoffset="'+o.toFixed(2)+'" transform="rotate(-90 '+size/2+' '+size/2+')"'+(color?' style="stroke:'+color+'"':'')+'/></svg>'+(inner?'<span>'+inner+'</span>':'')+'</span>'}
+var ICO={search:'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>',
+ play:'<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg>',
+ trophy:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/></svg>',
+ hex:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 2.5l8.2 4.75v9.5L12 21.5l-8.2-4.75v-9.5z"/></svg>',
+ flame:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3c1 4 5 5.5 5 10a5 5 0 0 1-10 0c0-2.5 1.5-3.5 2-5 1 1.5 2 2 3 2-.5-2 0-5 0-7z"/></svg>'};
+var LOGO='<img src="logo-128.png" alt="" width="56" height="56" style="border-radius:16px;display:block">';
+ICO.user='<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>';
+ICO.lock='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><rect x="4" y="11" width="16" height="10" rx="2.5"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
+function modStats(m){var d=m.lessons.filter(function(l){return S.passed[l.id]}).length,min=m.lessons.reduce(function(a,l){return a+(l.min||8)},0);return {d:d,n:m.lessons.length,min:min}}
+function dur(min){var h=Math.floor(min/60),r=min%60;return h?h+' h'+(r?' '+(r<10?'0':'')+r:''):min+' min'}
+
+function rankLine(){return 'Rang '+S.rank+' · '+RANKS[S.rank-1]}
+var arank=null;
+function recentDays(ds){if(!ds)return 1e9;var t=Date.parse(ds+'T12:00:00');return isNaN(t)?1e9:(Date.now()-t)/864e5}
+function freshTag(l){return recentDays(l.added)<=21?'<span class="badge acc">Nouveau</span>':recentDays(l.upd)<=21?'<span class="badge">Mis à jour</span>':''}
+function frDate(ds){var t=Date.parse(ds+'T12:00:00');return isNaN(t)?ds:new Date(t).toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'})}
+function recentLessons(n){var a=[];COURSES.forEach(function(m){m.lessons.forEach(function(l){var d=Math.min(recentDays(l.added),recentDays(l.upd));if(d<=14)a.push([d,l])})});return a.sort(function(x,y){return x[0]-y[0]}).slice(0,n).map(function(x){return x[1]})}
+var MCOL={m01:['#34D399','#0EA5E9'],m02:['#60A5FA','#6366F1'],m03:['#22D3EE','#3B82F6'],m04:['#A78BFA','#6366F1'],m09:['#FBBF24','#F97316'],m05:['#F472B6','#8B5CF6'],m06:['#FCD34D','#EA580C'],m07:['#2DD4BF','#16A34A'],m08:['#FB7185','#E11D48'],m11:['#38BDF8','#6366F1'],m10:['#FDE68A','#D97706'],m12:['#C084FC','#DB2777'],m13:['#4ADE80','#0D9488'],m14:['#F87171','#F97316']};
+var MICO={m01:'<path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/>',m02:'<path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/>',m03:'<path d="M12 3a9 9 0 1 0 9 9h-9z"/><path d="M15 3.5A9 9 0 0 1 20.5 9H15z"/>',m04:'<path d="M19 5L5 19"/><circle cx="7" cy="7" r="2.5"/><circle cx="17" cy="17" r="2.5"/>',m09:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/>',m05:'<path d="M4 21V8l8-5 8 5v13"/><path d="M9 21v-6h6v6M3 21h18"/>',m06:'<path d="M6 3h12l3 6-9 12L3 9z"/><path d="M3 9h18M9 3l3 18 3-18"/>',m07:'<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5h6v2M3 12h18"/>',m08:'<path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/>',m11:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/>',m10:'<path d="M12 3l2.8 5.7 6.2.9-4.5 4.4 1 6.2-5.5-2.9-5.5 2.9 1-6.2L3 9.6l6.2-.9z"/>',m12:'<path d="M6 3h12M6 21h12"/><path d="M7 3c0 5 10 5 10 9s-10 4-10 9M17 3c0 5-10 5-10 9s10 4 10 9"/>',m13:'<path d="M3 6l6-3 6 3 6-3v15l-6 3-6-3-6 3z"/><path d="M9 3v15M15 6v15"/>',m14:'<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>'};
+var TICO={amf:'<path d="M12 3l8 4-8 4-8-4z"/><path d="M6 9v5c0 2 3 3.5 6 3.5s6-1.5 6-3.5V9"/><path d="M20 7v6"/>',srs:'<path d="M20 12a8 8 0 1 1-2.3-5.7"/><path d="M20 4v5h-5"/>',mix:'<path d="M4 7h11l-3-3M20 17H9l3 3"/>',gloss:'<path d="M4 20l6-16h4l6 16"/><path d="M7 13h10"/>',basics:'<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 7h6M9 11h1M14 11h1M9 15h1M14 15h1"/>',interets:'<path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/>',frais:'<circle cx="12" cy="12" r="9"/><path d="M15 9.5c-.6-1-1.7-1.5-3-1.5-1.9 0-3 1-3 2.2 0 3 6 1.6 6 4.6 0 1.2-1.2 2.2-3 2.2-1.4 0-2.6-.6-3.1-1.6M12 6v2M12 16v2"/>',fisc:'<path d="M7 3h10v18l-2.5-1.5L12 21l-2.5-1.5L7 21z"/><path d="M10 8h4M10 12h4"/>',cre
