@@ -1,0 +1,35 @@
+tn" type="submit">Valider</button></form>'+
+   (kind==='email'?'<button class="lnk" data-gate="resend" style="align-self:center">Renvoyer le code</button>':'')+'<button class="lnk" data-gate="out" style="align-self:center">Se déconnecter</button></div>'}
+function gateHide(){var g=$('#fgate');if(g)g.remove()}
+function gateCheck(){acctInfo().then(function(i){if(!i||i.anonymous){gateHide();return}
+  if(i.next==='aal2'&&i.aal!=='aal2'){gateShow('totp');return}
+  if(i.emailCode&&lsGet('mi-2fa:'+i.id)!=='1'){fAcc().sendCode(i.email,false).then(function(){gateShow('email')},function(x){gateShow('email',x.message)});return}
+  gateHide();render()})}
+document.addEventListener('submit',function(e){if(!e.target||e.target.id!=='gateForm')return;e.preventDefault();var g=$('#fgate'),k=g&&g.dataset.kind,c=($('#gateIn').value||'').replace(/\s/g,''),A=fAcc();if(c.length<6){fErr('gateErr','Entre le code à 6 chiffres.');return}
+  var p=k==='totp'?A.totpCheck(null,c):A.verifyCode((ACC.me||{}).email,c).then(function(u){if(u&&u.id)lsSet('mi-2fa:'+u.id,'1')});
+  p.then(function(){gateHide();gateCheck()}).catch(function(x){fErr('gateErr',x.message)})},true);
+document.addEventListener('click',function(e){var t=e.target.closest&&e.target.closest('[data-gate]');if(!t)return;
+  if(t.dataset.gate==='resend'){fAcc().sendCode((ACC.me||{}).email,false).then(function(){fErr('gateErr','');$('#gateErr').textContent='Nouveau code envoyé.'},function(x){fErr('gateErr',x.message)});return}
+  if(t.dataset.gate==='out'){fAcc().logout().then(function(){lsSet(KEY,null);lsSet('mi-adopt',null);location.reload()})}});
+
+/* actions des boutons du compte */
+document.addEventListener('click',function(e){var t=e.target.closest&&e.target.closest('[data-cl]');if(!t)return;var k=t.dataset.cl,A=fAcc();if(!A)return;
+  if(k==='open'){CL.step='';clHome();return}
+  if(k==='google'){t.disabled=true;A.google().catch(function(x){t.disabled=false;fErr('clErr',x.message)});return}
+  if(k==='code'){CL.step='';clCode();return}
+  if(k==='pwin'){miAcctSheet('in');return}
+  if(k==='pwnew'){miAcctSheet('new');return}
+  if(k==='sec'){secOpen();return}
+  if(k==='totpon'){t.disabled=true;A.totpStart().then(function(r){SEC.enroll=r;secRender()}).catch(function(x){t.disabled=false;toast(x.message)});return}
+  if(k==='totpoff'){var i=AINFO;if(!i||!i.totp.length)return;if(!confirm('Désactiver l’appli de codes ?'))return;
+    var off=function(){return A.totpRemove(i.totp[0]).then(function(){toast('Appli de codes désactivée');acctInfo().then(function(){secRender();render()})})};
+    off().catch(function(){var c=prompt('Pour confirmer, entre le code à 6 chiffres de ton appli de codes :');if(!c)return;A.totpCheck(i.totp[0],c).then(off).catch(function(x){toast(x.message)})});return}
+  if(k==='mailon'||k==='mailoff'){t.disabled=true;A.emailCode(k==='mailon').then(function(){if(k==='mailon'&&ACC.uid)lsSet('mi-2fa:'+ACC.uid,'1');toast(k==='mailon'?'Code par e-mail activé':'Code par e-mail désactivé');acctInfo().then(function(){secRender();render()})}).catch(function(x){t.disabled=false;toast(x.message)})}});
+
+/* ---------- start ---------- */
+lastJson=stateSig();applyTheme(S.theme); render();if(TAMPER)setTimeout(function(){toast('Progression modifiée hors de l’app détectée : elle a été remise à zéro')},800); rotatePill(); loadCourses(); loadNews(); loadParams(); initAccount();
+setInterval(rotatePill,6000);
+})();
+</script>
+
+</body></html>
