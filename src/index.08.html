@@ -1,0 +1,160 @@
+XP.i++;AXP.sel=-1;AXP.done=0;amfPRender();return}
+  if(a==='prev'){c.i=Math.max(0,c.i-1);amfRender();return}
+  if(a==='next'){if(c.i>=c.qs.length-1){c.grid=1}else c.i++;amfRender();return}
+  if(a==='flag'){if(c.flag[c.i])delete c.flag[c.i];else c.flag[c.i]=1;save();amfRender();return}
+  if(a==='grid'){c.grid=1;amfRender();return}
+  if(a==='back'){c.grid=0;amfRender();return}
+  if(a==='endask'){c.end2=1;c.quit=0;amfRender();return}
+  if(a==='endno'){c.end2=0;amfRender();return}
+  if(a==='finish'){amfFinish(false);return}
+  if(a==='quitask'){c.grid=1;c.quit=1;c.end2=0;amfRender();return}
+  if(a==='quitno'){c.quit=0;c.grid=0;amfRender();return}
+  if(a==='quit'){clearInterval(AXT);S.amf.cur=null;save();amfHub();toast('Examen blanc abandonné');return}});
+
+/* ---------- legal pages ---------- */
+var LEGAL={
+ mentions:['Mentions légales',[
+  ['Éditeur','Mindinvest est édité par [NOM OU RAISON SOCIALE], [forme juridique] au capital de [montant] €, immatriculée au RCS de [ville] sous le numéro [SIREN], dont le siège est situé [adresse]. Directeur de la publication : [nom]. Contact : [adresse e-mail de contact].'],
+  ['Hébergement','[Nom de l’hébergeur], [adresse], [téléphone].'],
+  ['Propriété intellectuelle','Les cours, questions, textes, schémas, interfaces et marques d’Mindinvest sont protégés par le droit d’auteur et le droit des marques. Toute reproduction, même partielle, sans autorisation écrite est interdite.'],
+  ['Nature du service','Mindinvest est un service d’éducation financière. Il ne fournit ni conseil en investissement personnalisé, ni service de réception-transmission d’ordres, ni gestion de portefeuille. Mindinvest n’est pas un prestataire de services d’investissement et ne détient aucun fonds de ses utilisateurs.']]],
+ cgu:['Conditions générales d’utilisation',[
+  ['1. Objet','Les présentes conditions encadrent l’utilisation de l’application Mindinvest, service d’éducation financière comprenant des cours, des quiz, une préparation à la certification AMF et une rubrique d’actualités.'],
+  ['2. Compte','L’utilisateur peut se connecter à son compte pour retrouver sa progression sur ses différents appareils. Il est responsable de la confidentialité de ses identifiants.'],
+  ['3. Loyauté des tests','Les quiz et examens mesurent les connaissances réelles. Toute tentative de contournement (outils automatiques, partage de réponses, manipulation de l’application) peut entraîner l’annulation des résultats et du rang obtenu.'],
+  ['4. Absence de conseil','Les contenus ont une finalité exclusivement pédagogique. Ils ne constituent pas un conseil en investissement, une recommandation personnalisée ou une sollicitation d’achat ou de vente d’un instrument financier. L’utilisateur reste seul responsable de ses décisions d’investissement.'],
+  ['5. Responsabilité','Mindinvest s’efforce de fournir des informations exactes et à jour, sans pouvoir le garantir. Sa responsabilité ne saurait être engagée pour une perte financière résultant de l’utilisation des contenus.'],
+  ['6. Droit applicable','Les présentes conditions sont soumises au droit français. En cas de litige, l’utilisateur peut recourir gratuitement à un médiateur de la consommation : [nom et coordonnées du médiateur].']]],
+ confid:['Politique de confidentialité',[
+  ['Responsable du traitement','[NOM OU RAISON SOCIALE], [adresse]. Contact : [adresse e-mail dédiée aux données personnelles].'],
+  ['Données collectées','Identifiant de compte, progression (leçons, quiz, rangs, préparation AMF), réponses aux exercices écrits et préférences d’affichage. Nous ne collectons ni ton adresse postale, ni tes coordonnées bancaires.'],
+  ['Professeur IA','Les questions posées au professeur IA et les réponses aux exercices sont transmises à notre fournisseur d’intelligence artificielle pour générer une réponse. N’y inscris pas d’informations personnelles sensibles.'],
+  ['Finalités et bases légales','Fournir le service et sauvegarder ta progression (exécution du contrat).'],
+  ['Durée de conservation','Pendant toute la durée du compte, puis 3 ans après la dernière activité, sauf obligation légale contraire.'],
+  ['Tes droits','Accès, rectification, effacement, limitation, opposition et portabilité : écris à [adresse e-mail]. Tu peux aussi saisir la CNIL (www.cnil.fr).'],
+  ['Stockage local','L’application enregistre aussi ta progression sur ton appareil pour fonctionner hors connexion. Elle n’utilise aucun cookie publicitaire.']]],
+ avert:['Avertissement sur les risques',[
+  ['Un outil pour apprendre','Mindinvest enseigne le fonctionnement des marchés financiers. Rien dans l’application, y compris les actualités, les exemples et les réponses de l’IA, ne constitue un conseil en investissement personnalisé au sens du Code monétaire et financier.'],
+  ['Risque de perte en capital','Investir en Bourse comporte un risque de perte partielle ou totale du capital investi. Les performances passées ne préjugent pas des performances futures. Les produits à effet de levier, les cryptoactifs et les produits dérivés peuvent entraîner des pertes rapides et importantes.'],
+  ['Avant d’investir','Investis seulement l’argent dont tu n’as pas besoin à court terme, après avoir constitué une épargne de précaution. Pour une recommandation adaptée à ta situation, adresse-toi à un conseiller en investissements financiers enregistré à l’ORIAS. Vérifie qu’un intermédiaire est autorisé sur le site de l’AMF.']]]
+};
+function legalSheet(k){var L=LEGAL[k];if(!L)return;
+  sheet('<div class="sheet-top"><span class="k">Informations légales</span><button class="xbtn" data-close="1" aria-label="Fermer">✕</button></div><h2 class="title-xl">'+L[0]+'</h2>'+
+   '<div class="chips">'+Object.keys(LEGAL).map(function(x){return '<button class="chip" data-legal="'+x+'" aria-pressed="'+(x===k)+'">'+({mentions:'Mentions',cgu:'CGU',confid:'Données',avert:'Risques'})[x]+'</button>'}).join('')+'</div>'+
+   L[1].map(function(sct){return '<div class="blk"><h3>'+sct[0]+'</h3><p style="margin:0;line-height:1.55">'+sct[1]+'</p></div>'}).join('')+'<p class="note">Version du 22 octobre 2026. Les éléments entre crochets sont à compléter avant la mise en ligne publique.</p>');
+  var sh=document.querySelector('.sheet');if(sh)sh.scrollTop=0}
+
+var GLOSS={
+'Action':'Titre de propriété d’une part d’entreprise. Il donne droit à une part des bénéfices (dividendes) et, en général, au vote en assemblée générale.',
+'Obligation':'Titre de dette : l’investisseur prête à un État ou une entreprise, qui verse des intérêts (le coupon) puis rembourse à l’échéance.',
+'ETF':'Fonds coté en Bourse qui réplique un indice (par exemple le MSCI World). Il permet d’acheter des centaines de titres en une seule ligne, avec des frais bas.',
+'Indice':'Panier de titres qui mesure l’évolution d’un marché : CAC 40, S&P 500, MSCI World…',
+'Dividende':'Part du bénéfice qu’une entreprise verse à ses actionnaires, souvent une fois par an en France.',
+'Coupon':'Intérêt versé périodiquement au détenteur d’une obligation.',
+'Capitalisation boursière':'Valeur totale d’une entreprise en Bourse : cours de l’action multiplié par le nombre d’actions.',
+'Inflation':'Hausse générale des prix sur une période. Elle réduit le pouvoir d’achat de l’argent qui ne rapporte rien.',
+'Taux directeur':'Taux fixé par une banque centrale (BCE, Fed) qui détermine le coût de l’argent à court terme pour les banques.',
+'Taux de dépôt':'Taux auquel la BCE rémunère l’argent que les banques déposent chez elle. C’est son principal taux directeur.',
+'BCE':'Banque centrale européenne : elle conduit la politique monétaire de la zone euro, avec un objectif d’inflation de 2 %.',
+'Fed':'Réserve fédérale, la banque centrale des États-Unis.',
+'PIB':'Produit intérieur brut : la valeur de tout ce qui est produit dans un pays en un an. Sa variation mesure la croissance.',
+'Récession':'Recul de l’activité économique, souvent défini comme deux trimestres consécutifs de baisse du PIB.',
+'Intérêts composés':'Intérêts qui produisent eux-mêmes des intérêts quand on les réinvestit. L’effet devient très puissant sur le long terme.',
+'Diversification':'Répartir son argent entre de nombreux actifs, secteurs et pays pour que la chute de l’un ne ruine pas l’ensemble.',
+'Volatilité':'Ampleur des variations d’un prix. Une forte volatilité signifie des hausses et des baisses importantes.',
+'Rendement':'Ce que rapporte un placement, en pourcentage de la somme investie, sur une période donnée.',
+'Rendement réel':'Rendement après déduction de l’inflation. Un livret à 1,7 % avec 3 % d’inflation a un rendement réel négatif.',
+'Plus-value':'Gain réalisé quand on vend un actif plus cher qu’on ne l’a acheté.',
+'Moins-value':'Perte réalisée quand on vend un actif moins cher qu’on ne l’a acheté.',
+'PEA':'Plan d’épargne en actions : enveloppe française pour les actions européennes, plafonnée à 150 000 € de versements, avec une fiscalité allégée après 5 ans.',
+'Assurance-vie':'Enveloppe d’épargne très souple, avec une fiscalité avantageuse après 8 ans et des avantages pour la transmission.',
+'PER':'Selon le contexte : plan d’épargne retraite, ou price earnings ratio (cours divisé par le bénéfice par action).',
+'Compte-titres':'Compte sans plafond ni avantage fiscal, qui donne accès à tous les marchés et instruments.',
+'PFU':'Prélèvement forfaitaire unique, ou flat tax : 31,4 % en 2026 sur les revenus du capital (12,8 % d’impôt et 18,6 % de prélèvements sociaux).',
+'Flat tax':'Autre nom du prélèvement forfaitaire unique (PFU) sur les revenus du capital.',
+'Prélèvements sociaux':'Contributions (CSG, CRDS…) prélevées sur les revenus du capital : 18,6 % en 2026, 17,2 % pour l’assurance-vie.',
+'Livret A':'Livret d’épargne réglementé, sans risque et disponible, exonéré d’impôt. Plafond de 22 950 €, taux de 1,7 % depuis août 2026.',
+'LEP':'Livret d’épargne populaire, réservé aux revenus modestes, mieux rémunéré que le Livret A (2,5 % en 2026).',
+'Épargne de précaution':'Réserve d’argent disponible, en général 3 à 6 mois de dépenses, pour faire face aux imprévus sans vendre ses placements.',
+'Allocation d’actifs':'Répartition d’un patrimoine entre grandes classes d’actifs : actions, obligations, liquidités, immobilier…',
+'Rééquilibrage':'Revenir périodiquement à son allocation cible en vendant ce qui a monté et en achetant ce qui a baissé.',
+'DCA':'Investissement programmé : placer la même somme à intervalles réguliers, quel que soit le niveau du marché.',
+'Courtier':'Intermédiaire qui transmet tes ordres d’achat et de vente à la Bourse.',
+'Ordre au marché':'Ordre exécuté immédiatement au meilleur prix disponible, sans garantie de prix.',
+'Ordre à cours limité':'Ordre qui ne s’exécute qu’à un prix égal ou meilleur que la limite fixée.',
+'Spread':'Écart entre le prix d’achat et le prix de vente proposés sur le marché. C’est un coût caché.',
+'Frais courants':'Frais annuels d’un fonds ou d’un ETF, prélevés directement sur sa valeur. Indicateur TER en anglais.',
+'Gestion passive':'Gestion qui se contente de reproduire un indice, sans chercher à le battre, avec des frais faibles.',
+'Gestion active':'Gestion où un gérant choisit les titres pour tenter de battre son indice de référence, avec des frais plus élevés.',
+'Capitalisant':'Se dit d’un fonds qui réinvestit automatiquement ses dividendes au lieu de les verser.',
+'Distribuant':'Se dit d’un fonds qui verse ses dividendes aux porteurs.',
+'Réplication physique':'Méthode d’un ETF qui achète réellement les titres de l’indice.',
+'Réplication synthétique':'Méthode d’un ETF qui obtient la performance de l’indice par un contrat d’échange (swap) avec une banque.',
+'MSCI World':'Indice d’environ 1 400 grandes et moyennes entreprises de 23 pays développés.',
+'S&P 500':'Indice des 500 plus grandes entreprises américaines cotées.',
+'CAC 40':'Indice des 40 principales capitalisations de la Bourse de Paris.',
+'Duration':'Mesure de la sensibilité du prix d’une obligation aux taux : une duration de 7 signifie environ −7 % si les taux montent de 1 point.',
+'Risque de crédit':'Risque que l’emprunteur ne rembourse pas sa dette.',
+'Notation':'Note attribuée par une agence (S&P, Moody’s, Fitch) à la qualité de crédit d’un emprunteur, de AAA à D.',
+'Courbe des taux':'Graphique des taux d’intérêt selon la durée d’emprunt. Elle est dite inversée quand les taux courts dépassent les taux longs.',
+'OAT':'Obligation assimilable du Trésor : titre de dette émis par l’État français.',
+'Spread de crédit':'Écart de taux entre un emprunteur et un emprunteur jugé sans risque. Il grandit quand les marchés s’inquiètent.',
+'Chiffre d’affaires':'Total des ventes d’une entreprise sur une période.',
+'EBITDA':'Résultat d’exploitation avant dotations aux amortissements : un indicateur de la rentabilité opérationnelle.',
+'Résultat net':'Bénéfice final d’une entreprise, après toutes les charges, intérêts et impôts.',
+'BPA':'Bénéfice par action : résultat net divisé par le nombre d’actions.',
+'Bilan':'Photographie de ce qu’une entreprise possède (actif) et de la façon dont c’est financé (dettes et capitaux propres).',
+'Capitaux propres':'Argent apporté et laissé par les actionnaires dans l’entreprise : actif moins dettes.',
+'Free cash flow':'Trésorerie générée par l’activité après les investissements : ce qui reste vraiment disponible.',
+'ROE':'Rentabilité des capitaux propres : résultat net divisé par les capitaux propres.',
+'ROIC':'Rentabilité du capital investi. La croissance ne crée de la valeur que si le ROIC dépasse le coût du capital.',
+'Marge de sécurité':'Écart entre la valeur estimée d’une action et le prix payé, pour se protéger de ses propres erreurs.',
+'Valeur intrinsèque':'Valeur estimée d’une entreprise d’après les flux de trésorerie qu’elle produira, indépendamment du cours de Bourse.',
+'Avantage concurrentiel':'Ce qui protège durablement une entreprise de ses concurrents : marque, coûts bas, brevets, effet de réseau…',
+'Krach':'Chute brutale et rapide des cours de Bourse.',
+'Bulle':'Envolée des prix bien au-delà de toute valeur raisonnable, alimentée par l’euphorie, qui finit par éclater.',
+'Effet de levier':'Investir avec de l’argent emprunté : il amplifie les gains comme les pertes.',
+'Vente à découvert':'Vendre un titre emprunté en espérant le racheter moins cher plus tard.',
+'Liquidité':'Facilité à vendre un actif rapidement sans faire baisser son prix.',
+'Biais de confirmation':'Tendance à ne retenir que les informations qui confirment ce qu’on pense déjà.',
+'Aversion aux pertes':'Tendance à ressentir une perte environ deux fois plus fort qu’un gain de même montant.',
+'Choc d’offre':'Événement qui réduit brutalement la production d’un bien, comme une hausse du pétrole, et fait monter les prix.',
+'Politique monétaire':'Action d’une banque centrale sur les taux et la quantité de monnaie pour stabiliser les prix et l’activité.',
+'Politique budgétaire':'Action de l’État sur l’économie par ses dépenses et ses impôts.',
+'Déficit public':'Écart annuel entre les dépenses et les recettes de l’État et des administrations.',
+'Dette publique':'Somme de tout ce que doivent l’État et les administrations publiques, accumulée au fil des déficits.',
+'Assouplissement quantitatif':'Achats massifs de titres par une banque centrale pour faire baisser les taux longs. QE en anglais.',
+'Devise':'Monnaie d’un pays ou d’une zone, échangée sur le marché des changes.',
+'Risque de change':'Risque que la variation d’une devise fasse baisser la valeur d’un placement libellé dans cette devise.',
+'Matières premières':'Ressources brutes échangées sur les marchés : pétrole, gaz, métaux, produits agricoles.',
+'OPEP+':'Alliance des principaux pays producteurs de pétrole, dont l’Arabie saoudite et la Russie, qui coordonne la production.',
+'Valeur refuge':'Actif recherché en période de crise, comme l’or ou les obligations d’États solides.',
+'Cryptomonnaie':'Monnaie numérique fonctionnant sur une blockchain, sans banque centrale. Très volatile.',
+'Foncière':'Société cotée qui possède et loue des immeubles. Elle permet d’investir dans l’immobilier en Bourse.'
+};
+/* ---------- spaced repetition + strengths by module ---------- */
+var SRS_STEPS=[1,3,7,21];
+function srsUpdate(st){S.srs=S.srs||{};S.mstats=S.mstats||{};
+  st.qs.forEach(function(q,i){var l=LX[q.lesson];if(!l)return;var ms=S.mstats[l.mod.id]=S.mstats[l.mod.id]||{ok:0,n:0};ms.n++;if(st.ans[i])ms.ok++;
+    if(q.multi){if(!st.ans[i])(q.parts||[]).forEach(function(sg){S.srs[sg]={s:0,due:now()+SRS_STEPS[0]*864e5}});return}
+    if(q.sig.indexOf('#')<0)return;var r=S.srs[q.sig];
+    if(!st.ans[i])S.srs[q.sig]={s:0,due:now()+SRS_STEPS[0]*864e5};
+    else if(r){r.s++;if(r.s>=SRS_STEPS.length)delete S.srs[q.sig];else r.due=now()+SRS_STEPS[r.s]*864e5}});
+  var ks=Object.keys(S.srs);if(ks.length>400){ks.sort(function(a,b){return S.srs[a].due-S.srs[b].due});ks.slice(400).forEach(function(k){delete S.srs[k]})}}
+function srsDue(){var o=[];for(var k in (S.srs||{})){if(S.srs[k].due<=now())o.push(k)}return o}
+function srsNext(){var m=Infinity;for(var k in (S.srs||{}))m=Math.min(m,S.srs[k].due);return m===Infinity?0:m}
+function srsQs(){return srsDue().sort(function(a,b){return S.srs[a].due-S.srs[b].due}).slice(0,10).map(function(sig){var p=sig.split('#'),l=LX[p[0]];return l&&l.quiz[+p[1]]?bankQ(l,+p[1]):null}).filter(Boolean)}
+function srsRow(){var n=srsDue().length,nx=srsNext();
+  return '<button class="lrow" data-srs="1"'+(n||S.admin?'':' disabled')+'><span class="dot'+(n?' due':'')+'">'+(n||'✓')+'</span><span style="flex:1;min-width:0"><span class="t" style="display:block">Révision du jour</span><span class="s" style="display:block">'+(n?Math.min(n,10)+' question'+(n>1?'s':'')+' ratée'+(n>1?'s':'')+' à revoir aujourd’hui':nx?'Rien à revoir · prochaine révision dans '+Math.max(1,Math.ceil((nx-now())/864e5))+' j':'Tes erreurs de quiz reviendront ici 1, 3, 7 puis 21 jours plus tard')+'</span></span><span class="muted">›</span></button>'}
+function strengthsCard(){var ms=S.mstats||{},rows=COURSES.filter(function(m){return ms[m.id]&&ms[m.id].n>=5}).map(function(m){return {m:m,r:ms[m.id].ok/ms[m.id].n,n:ms[m.id].n}}).sort(function(a,b){return a.r-b.r});
+  if(!rows.length)return '<div class="card"><h3>Points forts et points faibles</h3><div class="note">Ton taux de réussite par thème apparaîtra ici après quelques quiz.</div></div>';
+  return '<div class="card"><h3>Points forts et points faibles</h3><div class="note">Taux de bonnes réponses par module, du plus faible au plus fort.</div>'+rows.map(function(x){var p=Math.round(x.r*100),c=p<60?'var(--down)':p<80?'#E8891C':'var(--up)';
+    return '<div class="sw-row"><div class="row"><span style="font-size:14px;font-weight:600">'+esc(x.m.title)+'</span><span class="num" style="font-weight:700">'+p+' %</span></div><div class="bar"><i style="width:'+p+'%;background:'+c+'"></i></div><div class="row"><span class="note">'+x.n+' réponses</span>'+(p<80?'<button class="btn small ghost" data-revmod="'+x.m.id+'">Réviser ce thème</button>':'<span class="note" style="color:var(--up)">Maîtrisé</span>')+'</div></div>'}).join('')+'</div>'}
+
+/* ---------- placement test ---------- */
+function placementQs(){var out=[];for(var r=1;r<=5;r++){var by={};pickQs(poolOf(rankLessons(r)),99999,[],0).forEach(function(x){(by[x[0].id]=by[x[0].id]||[]).push(x)});var ks=shuffle(Object.keys(by)),got=[],i=0;
+  while(got.length<6&&ks.some(function(k){return by[k].length})){var k=ks[i%ks.length];if(by[k].length)got.push(by[k].shift());i++}
+  got.forEach(function(x){var q=bankQ(x[0],x[1]);q.prank=r;out.push(q)})}return out}
+function placementCard(){if(S.placed||S.rank>1||LORDER.some(function(id){return S.passed[id]}))return '';
+  return '<div class="cta"><span class="dot pm">↗</span><div class="grow"><div style="font-size:17px;font-weight:600">Déjà des bases ?</div><div class="note">Test de placement : 30 questions, un seul essai. Place-toi directement jusqu’au rang Expert.</div></div><button class="btn small" data-place="1">Tester</button></div>'}
+function startPlacement(){var qs=placementQs();if(qs.length<10){toas
