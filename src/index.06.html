@@ -1,0 +1,150 @@
+x[0].id]=by[x[0].id]||[]).push(x)});
+    var keys=shuffle(Object.keys(by)),r=0;while(out.length<n&&keys.some(function(k){return by[k].length})){var k=keys[r%keys.length];if(by[k].length)out.push(by[k].shift());r++}
+    out=out.map(function(x){return bankQ(x[0],x[1])});
+  }
+  if(kind!=='srs'){var plids=kind==='lesson'?(pgFns(id).length?[id]:LX[id].mod.lessons.map(function(x){return x.id})):(ids||[]);out=addParam(out,plids,kind==='lesson'?0.25:kind==='exam'?0.15:0.2);out=addMulti(out,0.2,kind==='lesson'?LX[id].mod.lessons.map(function(x){return x.id}):(ids||[]))}
+  return shuffle(out);
+}
+function testName(kind,id){return kind==='srs'?'Révision du jour':(kind==='review'&&id)?'Révision · '+((COURSES.filter(function(m){return m.id===id})[0]||{}).title||''):kind==='lesson'?'Quiz de leçon':kind==='module'?'Test du module '+(COURSES.filter(function(m){return m.id===id})[0]||{}).num:kind==='exam'?'Examen de rang':'Révision'}
+/* ---------- AI (asks Claude when the viewer allows it) ---------- */
+var samplePromise = (window.MindCloud && window.MindCloud.use) ? window.MindCloud.use('sample').catch(function(){return null}) : Promise.resolve(null);
+function askAI(prompt,out,fallback){
+  out.textContent='Réflexion…';
+  samplePromise.then(function(sample){
+    if(!sample){out.textContent=fallback;return}
+    sample(prompt,{cache:false,onText:function(p){out.textContent=p.text}}).then(function(r){out.textContent=r.text}).catch(function(e){
+      out.textContent = (e&&e.code==='rate_limited') ? 'L\'IA est très sollicitée, réessaie dans un moment.' : fallback;
+    });
+  });
+}
+
+/* ---------- live pill ---------- */
+var NEWSDEMO=['Flash démo · Pétrole : le baril recule après la hausse des stocks','Flash démo · BCE : statu quo attendu sur les taux','Flash démo · Or : le métal profite d\'un dollar plus faible','Flash démo · Tech : résultats trimestriels attendus cette semaine'];
+var NEWS=[],NEWSDATA=null,ncat='Tout',ni=0;
+var MOREOPEN={};
+function more(key,title,sub,html){return '<details class="more" data-more="'+key+'"'+(MOREOPEN[key]?' open':'')+'><summary><span class="grow"><b>'+title+'</b>'+(sub?'<span class="note">'+sub+'</span>':'')+'</span><span class="chev" aria-hidden="true">›</span></summary><div class="morein">'+html+'</div></details>'}
+document.addEventListener('toggle',function(e){var d=e.target;if(d&&d.dataset&&d.dataset.more)MOREOPEN[d.dataset.more]=d.open},true);
+function rotatePill(){var a=NEWS.length?NEWS:NEWSDEMO;$('#pillText').textContent=a[ni%a.length];ni++}
+function loadNews(){fetch('news.json').then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(d){NEWSDATA=d;NEWS=d.items.map(function(n){return n.cat+' · '+n.title});ni=0;rotatePill();if(tab==='actus'||tab==='accueil')render()}).catch(function(){NEWSDATA={items:[],err:1};if(tab==='actus')render()})}
+function ago(ds){var d=new Date(ds+'T12:00:00'),n=Math.round((Date.now()-d)/864e5);return n<=0?'Aujourd’hui':n===1?'Hier':n<7?'Il y a '+n+' jours':d.toLocaleDateString('fr-FR',{day:'numeric',month:'long'})}
+/* ---------- news quizzes: daily flash + weekend review, unlocked at rank Visionnaire ---------- */
+var NQ_RANK=6;
+function nqUnlocked(){return true}
+function nqS(){if(!S.nq)S.nq={days:{},weeks:{},streak:0,last:'',wstreak:0,wlast:''};return S.nq}
+function nqPool(){return (NEWSDATA&&NEWSDATA.quiz)||[]}
+function nqSeen(){var o={},d=nqS().days;for(var k in d)(d[k].ids||[]).forEach(function(i){o[i]=1});return o}
+function nqFlashQs(){var t=ymd(new Date()),p=nqPool(),seen=nqSeen(),a=p.filter(function(q){return q.date===t});
+  if(a.length<5){var more=p.filter(function(q){return q.date!==t&&!seen[q.id]}).sort(function(x,y){return y.date<x.date?-1:1});a=a.concat(more)}
+  if(a.length<5)a=a.concat(p.filter(function(q){return a.indexOf(q)<0}));return a.slice(0,5)}
+function nqWeekOpen(){var g=new Date().getDay();return S.admin||g===5||g===6||g===0}
+function nqWeekQs(){var wk=weekKey(new Date()),p=nqPool().filter(function(q){return q.date>=wk});
+  if(p.length<10){var lim=ymd(new Date(Date.now()-7*864e5));p=nqPool().filter(function(q){return q.date>=lim})}
+  var by={};shuffle(p).forEach(function(q){(by[q.cat]=by[q.cat]||[]).push(q)});var ks=shuffle(Object.keys(by)),out=[],r=0;
+  while(out.length<15&&ks.some(function(k){return by[k].length})){var k=ks[r%ks.length];if(by[k].length)out.push(by[k].shift());r++}return out}
+function nqToQ(q){return {sig:'nq:'+q.id,q:q.q,opts:shuffle([{t:q.a,ok:1}].concat(q.w.map(function(w){return {t:w,ok:0}}))),explain:q.e,d:q.d||1,cat:q.cat,news:q.n}}
+function nqStart(kind){
+  if(!nqUnlocked()){toast('Débloqué au rang Visionnaire');return}
+  if(!nqPool().length){toast('Les questions de la semaine se chargent…');return}
+  var N=nqS(),t=ymd(new Date()),wk=weekKey(new Date());
+  if(kind==='flash'&&N.days[t]){toast('Flash du jour déjà joué. Rendez-vous demain !');return}
+  if(kind==='weekly'){if(N.weeks[wk]){toast('Bilan de la semaine déjà joué');return}if(!nqWeekOpen()){toast('Le bilan ouvre vendredi');return}}
+  var src=kind==='flash'?nqFlashQs():nqWeekQs();if(src.length<3){toast('Pas encore assez de questions cette semaine');return}
+  var qs=src.map(nqToQ),need=Math.ceil(qs.length*0.8),cats=src.map(function(q){return q.cat}).filter(function(c,i,a){return a.indexOf(c)===i});
+  var title=kind==='flash'?'Flash actu du jour':'Bilan de la semaine';
+  sheet('<div class="sheet-top"><span class="k">Défi actu</span><button class="xbtn" data-close="1" aria-label="Fermer">✕</button></div><h2 class="title-xl">'+title+'</h2>'+
+   '<div class="statgrid"><div><small>Questions</small><b class="num">'+qs.length+'</b></div><div><small>Objectif</small><b class="num">'+need+'</b></div><div><small>Thèmes</small><b class="num">'+cats.length+'</b></div><div><small>Essai</small><b class="num">1 seul</b></div></div>'+
+   '<div class="chips" style="flex-wrap:wrap">'+cats.map(function(c){return '<span class="chip" style="display:inline-flex;align-items:center">'+esc(c)+'</span>'}).join('')+'</div>'+
+   '<div class="note">'+(kind==='flash'?'Cinq questions sur l’actualité récente. Un seul essai par jour : quitter en cours compte comme joué.':'Quinze questions sur toute l’actualité de la semaine, une par thème à tour de rôle. Ouvert du vendredi au dimanche, un seul essai.')+' Chrono par question comme aux examens.</div>'+
+   '<button class="btn" id="nqGo">Commencer</button>');
+  $('#nqGo').addEventListener('click',function(){var rec={ids:src.map(function(q){return q.id}),score:0,n:qs.length,at:now()};if(kind==='flash')N.days[t]=rec;else N.weeks[wk]=rec;save();
+    quizState={cfg:{kind:kind},key:'nq',qs:qs,i:0,ans:[],need:need,title:title,start:now(),attempt:0,day:t,wk:wk};renderQuestion()})}
+function finishNewsQuiz(){
+  var st=quizState,kind=st.cfg.kind,N=nqS(),score=st.ans.reduce(function(a,b){return a+b},0),ok=score>=st.need,gained=0,streak=0;
+  if(kind==='flash'){var y=ymd(new Date(Date.now()-864e5));N.streak=(N.last===y)?N.streak+1:(N.last===st.day?N.streak:1);N.last=st.day;streak=N.streak;
+    (N.days[st.day]||{}).score=score;gained=score*15+(ok?50:0)+Math.min(70,10*streak)}
+  else{var pw=new Date(st.wk+'T00:00:00');pw.setDate(pw.getDate()-7);N.wstreak=(N.wlast===ymd(pw))?N.wstreak+1:1;N.wlast=st.wk;streak=N.wstreak;
+    (N.weeks[st.wk]||{}).score=score;gained=score*20+(ok?300:0)}
+  addXP(gained);goalAdd(score,0);
+  var html='<div class="row"><span class="eyebrow">'+esc(st.title)+'</span><button class="btn ghost small" data-close="1">Fermer</button></div>'+
+   '<div class="card" style="align-items:center;text-align:center"><div class="big num">'+score+' / '+st.qs.length+'</div><h2>'+(ok?'Bien informé !':'Il y avait des pièges')+'</h2><div class="note">'+
+   (kind==='flash'?'Série actu : '+streak+' jour'+(streak>1?'s':'')+' d’affilée. Nouveau flash demain matin, ne casse pas ta série.':'Bilans réussis d’affilée : '+streak+' semaine'+(streak>1?'s':'')+'. Prochain bilan vendredi.')+'</div></div>'+
+   '<div class="eyebrow">Corrigé</div>'+st.qs.map(function(q,i){var good=q.opts.filter(function(o){return o.ok})[0];return '<div class="card"><span class="k" style="font-size:12px;color:var(--sec);font-weight:600">'+esc(q.cat||'')+'</span><div style="font-weight:600">'+(st.ans[i]?'✓ ':'✗ ')+esc(q.q)+'</div><div class="note"><strong>'+esc(good?good.t:'')+'</strong> · '+esc(q.explain)+'</div>'+(q.news?'<button class="btn small ghost" data-news="'+esc(q.news)+'" style="align-self:flex-start">Lire l’article</button>':'')+'</div>'}).join('')+
+   '<button class="btn" data-close="1">Continuer</button>';
+  quizState=null;sheet(html);render()}
+function nqLeft(){var d=new Date();d.setHours(24,0,0,0);var h=Math.ceil((d-now())/36e5);return h<=1?'moins d’une heure':h+' h'}
+function nqBlock(home){
+  if(!nqUnlocked())return home?'':'<div class="lockrow">'+ICO.lock+'<span>Défis actu quotidiens : dès le rang Visionnaire</span></div>';
+  var N=nqS(),t=ymd(new Date()),wk=weekKey(new Date()),fd=N.days[t],wd=N.weeks[wk],y=ymd(new Date(Date.now()-864e5)),alive=N.last===t||N.last===y,sk=alive?N.streak:0;
+  if(home&&fd)return '';
+  var flash='<button class="lrow" data-nq="flash"><span class="dot'+(fd?' ok':'')+'">'+(fd?'✓':'5')+'</span><span style="flex:1;min-width:0"><span class="t" style="display:block">Flash actu du jour</span><span class="s" style="display:block">'+(fd?'Fait : '+fd.score+'/'+fd.n+' · nouveau flash dans '+nqLeft():'5 questions · 3 min'+(sk?' · série de '+sk+' jour'+(sk>1?'s':'')+' en jeu':''))+'</span></span><span class="muted">›</span></button>';
+  if(home)return '<div class="grp">'+flash+'</div>';
+  var wopen=nqWeekOpen(),week='<button class="lrow" data-nq="weekly"'+(!wopen&&!wd?' disabled':'')+'><span class="dot'+(wd?' ok':'')+'">'+(wd?'✓':'7')+'</span><span style="flex:1;min-width:0"><span class="t" style="display:block">Bilan de la semaine</span><span class="s" style="display:block">'+(wd?'Fait : '+wd.score+'/'+wd.n+' · prochain bilan vendredi':wopen?'15 questions · tous les thèmes · ferme dimanche soir':'Ouvre vendredi · 15 questions sur la semaine')+'</span></span><span class="muted">›</span></button>';
+  return '<div class="sec-h"><h2>Défis actu</h2><span class="note">'+(sk?'Série de '+sk+' jour'+(sk>1?'s':''):'')+'</span></div><div class="grp">'+flash+week+'</div>'}
+function screenActus(){
+  var h='<div class="screen"><div class="pg-h"><div><div class="sub">'+(NEWSDATA&&NEWSDATA.updated?'Mis à jour le '+new Date(NEWSDATA.updated).toLocaleDateString('fr-FR',{day:'numeric',month:'long'})+' à '+new Date(NEWSDATA.updated).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}):'Chargement…')+'</div><h1>Actualités</h1></div></div>';
+  if(!NEWSDATA)return h+'</div>';
+  if(NEWSDATA.err||!NEWSDATA.items.length)return h+'<div class="card"><div class="note">Les actualités n’ont pas pu être chargées. Recharge la page.</div></div></div>';
+  var cats=['Tout'].concat(NEWSDATA.items.map(function(n){return n.cat}).filter(function(c,i,a){return a.indexOf(c)===i}));
+  var list=NEWSDATA.items.filter(function(n){return ncat==='Tout'||n.cat===ncat});
+  var top=ncat==='Tout'?list.filter(function(n){return n.top})[0]:null,rest=list.filter(function(n){return n!==top});
+  h+=nqBlock(false);
+  h+='<div class="chips" style="margin-bottom:-12px">'+cats.map(function(c){return '<button class="chip" data-ncat="'+esc(c)+'" aria-pressed="'+(c===ncat)+'">'+esc(c)+'</button>'}).join('')+'</div>';
+  if(top)h+='<button class="cover news-top" data-news="'+top.id+'"><span class="k">À la une · '+esc(top.cat)+' · '+ago(top.date)+'</span><span class="ttl">'+esc(top.title)+'</span><span class="meta">'+top.tags.map(function(t){return '<span class="tg">'+esc(t)+'</span>'}).join('')+'</span></button>';
+  h+='<div class="grp">'+rest.map(function(n){return '<button class="nrow" data-news="'+n.id+'"><span class="k">'+esc(n.cat)+' · '+ago(n.date)+'</span><span class="t">'+esc(n.title)+'</span><span class="s">'+esc(n.src.join(', '))+'</span></button>'}).join('')+'</div>';
+  h+='<p class="note" style="text-align:center">Rédigé par Mindinvest à partir de sources vérifiées. Pas un conseil en investissement.</p></div>';
+  return h;
+}
+function openNews(id){var n=(NEWSDATA&&NEWSDATA.items||[]).filter(function(x){return x.id===id})[0];if(!n)return;
+  sheet('<div class="sheet-top"><span class="k">'+esc(n.cat)+' · '+new Date(n.date+'T12:00:00').toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'})+'</span><button class="xbtn" data-close="1" aria-label="Fermer">✕</button></div>'+
+   '<h2 class="title-xl">'+esc(n.title)+'</h2><div class="pills">'+n.tags.map(function(t){return '<span>'+esc(t)+'</span>'}).join('')+'</div>'+
+   '<p style="margin:0;font-size:17px;line-height:1.55">'+esc(n.sum)+'</p>'+
+   '<div class="deep"><span class="tag">Pourquoi ça compte</span><p>'+esc(n.why)+'</p></div>'+
+   (n.lessons&&n.lessons.length&&coursesState==='ok'?'<div class="blk"><h3>Comprendre</h3><div class="grp">'+n.lessons.filter(function(x){return LX[x]}).map(function(x){var l=LX[x];return '<button class="lrow" data-lesson="'+x+'"><span class="dot'+(S.passed[x]?' ok':'')+'">'+(S.passed[x]?'✓':'›')+'</span><span style="flex:1;min-width:0"><span class="t" style="display:block">'+esc(l.title)+'</span><span class="s" style="display:block">Rang '+l.mod.rank+' · '+esc(l.mod.title)+'</span></span></button>'}).join('')+'</div></div>':'')+
+   '<div class="card"><h3>Explique-moi</h3><div class="chips"><button class="chip" data-nask="Explique-moi cette actualité simplement, comme à un débutant.">Plus simple</button><button class="chip" data-nask="Quelles conséquences possibles sur un portefeuille diversifié d’ETF ? Reste général, sans conseil personnalisé.">Et mon portefeuille ?</button><button class="chip" data-nask="Relie cette actualité à un épisode historique comparable.">Précédent historique</button></div><div class="ai" id="nOut" hidden></div></div>'+
+   '<div class="note">Sources consultées : '+esc(n.src.join(', '))+'.</div>');
+  document.querySelectorAll('[data-nask]').forEach(function(b){b.addEventListener('click',function(){var o=$('#nOut');o.hidden=false;askAI('Tu es le journaliste pédagogue de l’application Mindinvest. Réponds en français, en 6 phrases maximum, sans conseil d’investissement personnalisé et sans renvoyer vers d’autres sites. Actualité : « '+n.title+' ». Résumé : '+n.sum+' Analyse : '+n.why+' Demande : '+b.dataset.nask,o,'L’IA n’est pas disponible dans cette vue. Dans l’app, elle expliquerait ici cette actualité.')})});
+}
+
+/* ---------- account: claude.ai sign-in, cloud save of progress, real leagues ---------- */
+var ACC={state:'wait',db:null,uid:null,me:null,owner:false,lastSync:0,err:''};
+var cloudTimer=null,pushing=false,pushAgain=false,lgUnsub=null,lgSent='';
+function cloudPayload(){var c=JSON.parse(JSON.stringify(S));delete c.admin;if(c.trades&&c.trades.length>300)c.trades=c.trades.slice(-300);
+  var str=JSON.stringify(c);if(str.length>230000){c.trades=(c.trades||[]).slice(-50);c.examSigs=[];for(var k in c.quiz){if(c.quiz[k])delete c.quiz[k].sigs}}return c}
+function queueCloud(){if(ACC.state!=='ok')return;clearTimeout(cloudTimer);cloudTimer=setTimeout(pushCloud,2500)}
+function pushCloud(){if(!ACC.db||!ACC.uid)return;if(pushing){pushAgain=true;return}pushing=true;
+  ACC.db.doc('data/users/'+ACC.uid+'/state').set({v:1,upd:S.upd||now(),s:cloudPayload()}).then(function(){ACC.lastSync=now();ACC.err=''}).catch(function(e){ACC.err=(e&&e.code)||'erreur'}).then(function(){pushing=false;if(pushAgain){pushAgain=false;pushCloud()}});
+  }
+function publishLeague(){if(!ACC.db||!ACC.uid||!S.pseudo||!S.lg.week)return;var body={week:S.lg.week,league:S.lg.league,pts:Math.round(myPoints()),pseudo:S.pseudo,upd:now()},sig=body.week+'|'+body.league+'|'+body.pts+'|'+body.pseudo;
+  if(sig===lgSent){flPublish();return}lgSent=sig;ACC.db.doc('leagues/'+ACC.uid).set(body).catch(function(){lgSent=''});flPublish()}
+function subscribeLeague(){if(!ACC.db||!S.lg.week)return;var key=S.lg.week+'|'+S.lg.league;if(lgUnsub&&LGREAL.want===key)return;
+  if(lgUnsub)lgUnsub();LGREAL.want=key;
+  lgUnsub=ACC.db.collection('leagues').where('week','==',S.lg.week).where('league','==',S.lg.league).limit(200).onSnapshot(function(snap){
+    LGREAL={key:key,want:key,rows:snap.docs.filter(function(d){return d.id!==ACC.uid}).map(function(d){var x=d.data()||{};return {name:String(x.pseudo||'Joueur').slice(0,20),pts:Math.max(0,Math.min(99999,+x.pts||0))}}).sort(function(a,b){return b.pts-a.pts})};
+    if(tab==='profil'&&!$('#layer').innerHTML)render()},function(){lgUnsub=null})}
+function adoptCloud(c){var o=JSON.parse(JSON.stringify(c.s)),adm=S.admin;for(var k in o){S[k]=o[k]}if(S.psig&&S.psig!==progSig()){S.passed={};S.modPassed={};S.rank=1;S.grandMaster=0;S.tampered=Date.now();setTimeout(function(){toast('Progression en ligne invalide : elle a été remise à zéro')},500)}S.admin=adm;S.upd=c.upd;lastJson=stateSig();try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}applyTheme(S.theme)}
+function initAccount(){
+  if(!(window.MindCloud&&window.MindCloud.use)){ACC.state='off';onboard();return}
+  var u0=window.MindCloud.use('user').catch(function(){return null}),d0=window.MindCloud.use('db').catch(function(){return null});
+  Promise.all([u0,d0]).then(function(r){var u=r[0],db=r[1];
+    if(!u){ACC.state='off';onboard();refreshAcct();return}
+    return Promise.all([u.me(),u.isOwner()]).then(function(x){ACC.me=x[0];ACC.owner=!!x[1];ACC.uid=x[0].id;
+      S.admin=!!ACC.owner;if(ACC.owner)render();
+      if(!db||!ACC.uid){ACC.state='local';onboard();refreshAcct();return}
+      ACC.db=db;ACC.state='sync';refreshAcct();
+      return db.doc('data/users/'+ACC.uid+'/state').get().then(function(snap){var c=snap.exists?snap.data():null;ACC.state='ok';
+        var adoptNow=false;try{adoptNow=localStorage.getItem('mi-adopt')==='1';localStorage.removeItem('mi-adopt')}catch(e){}
+        if(c&&c.s&&(adoptNow||freshInstall||!S.onb||(c.upd||0)>(S.upd||0))){adoptCloud(c);toast('Progression récupérée depuis ton compte')}
+        else if(!c||(S.upd||0)>(c.upd||0)){pushCloud()}
+        ACC.lastSync=now();gateCheck();render()})
+    })
+  }).catch(function(e){ACC.state='local';ACC.err=(e&&e.code)||'';onboard();refreshAcct()})}
+function refreshAcct(){var a=$('#avBtn');if(a&&ACC.me&&ACC.me.avatarUrl&&ACC.me.id){a.innerHTML='<img alt="" src="'+esc(ACC.me.avatarUrl)+'">'}if(tab==='profil'&&!$('#layer').innerHTML)render()}
+function syncLine(){return ACC.state==='ok'?(ACC.err?'Sauvegarde en ligne interrompue, nouvel essai à la prochaine action':'Sauvegardé en ligne'+(ACC.lastSync?' · '+agoS(ACC.lastSync):'')):ACC.state==='sync'||ACC.state==='wait'?'Connexion à ton compte…':'Sauvegarde sur cet appareil uniquement'}
+function agoS(t){var s=Math.round((now()-t)/1000);return s<60?'à l’instant':s<3600?'il y a '+Math.round(s/60)+' min':'il y a '+Math.round(s/3600)+' h'}
+function accountCard(){var me=ACC.me||{},nm=me.name||'',on=ACC.state==='ok';
+  return '<div class="acct"><div class="pic">'+(me.avatarUrl&&me.id?'<img alt="" src="'+esc(me.avatarUrl)+'">':ICO.user)+'</div><div class="grow"><div class="nm">'+esc(S.pseudo||nm||'Invité')+'</div><div class="note">'+(nm&&S.pseudo?esc(nm)+' · ':'')+'<span class="sdot'+(on?' on':'')+'"></span>'+esc(syncLine())+'</div></div><button class="btn small ghost" data-pseudo="1">Pseudo</button></div>'+
+   (ACC.state==='off'||ACC.state==='local'?'<div class="note">Connexion impossible pour le moment : ta progression reste sur cet appareil.</div>':'')+miAcctBox()}
+function pseudoOk(v){return /^[A-Za-zÀ-ÿ0-9_.\-]{3,20}$/.test(v)}
+function onboard(force){if(!force)return;if(!force&&$('#layer').innerHTML)return;var me=ACC.me||{},sug=S.pseudo||((me.name||'').split(' ')[0]||'').replace(/[^A-Za-zÀ-ÿ0-9_.\-]/g,'').slice(0,20);
+  sheet('<div class="sheet-top"><span class="k">'+(force?'Ton pseudo':'Bienvenue')+'</span>'+(force||S.onb?'<button class="xbtn" data-close="1" aria-label="Fermer">✕</button>':'<span></span>')+'</div>'+
+   (force?'':'<div class="brand-big">'+LOGO+'</div><h2 class="title-xl">Apprends à investir.<br>Pour de vrai.</h2><p class="note" style="fon
