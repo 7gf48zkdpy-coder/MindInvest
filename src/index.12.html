@@ -79,7 +79,7 @@ function render(){
   v.innerHTML = tab==='accueil'?screenHome():tab==='actus'?screenActus():tab==='outils'?screenOutils():screenApprendre();
 }
 /* ---------- search across all lessons + AI answer ---------- */
-function normTxt(t){return String(t).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/<[^>]+>/g,' ')}
+function normTxt(t){return String(t).toLowerCase().normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').replace(/<[^>]+>/g,' ')}
 function searchLessons(q){var w=normTxt(q).split(/[^a-z0-9]+/).filter(function(x){return x.length>2&&['les','des','une','est','que','qui','quoi','comment','pour','dans','avec','cest'].indexOf(x)<0});if(!w.length)return [];
   return LORDER.map(function(id){var l=LX[id],t=normTxt(l.title),k=normTxt((l.keys||[]).join(' ')),b=normTxt(l.body.join(' ')+' '+(l.deep||[]).join(' ')),sc=0;
     w.forEach(function(x){if(t.indexOf(x)>=0)sc+=6;if(k.indexOf(x)>=0)sc+=3;if(b.indexOf(x)>=0)sc+=1});return [sc,id]}).filter(function(x){return x[0]>0}).sort(function(a,b){return b[0]-a[0]}).slice(0,3).map(function(x){return x[1]})}
