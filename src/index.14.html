@@ -1,0 +1,146 @@
+k=score>=st.need,sigs=st.qs.map(function(q){return q.sig});
+  var firstPass=cfg.kind==='lesson'&&!S.passed[cfg.id];
+  var qz=S.quiz[st.key]||{};var prevScore=qz.last;qz.sigs=sigs;qz.n=(qz.n||0)+1;qz.best=Math.max(qz.best||0,score);qz.last=score;
+  var low=score<Math.round(st.qs.length*0.4);
+  if(ok){qz.fails=0;qz.until=0;qz.mustRead=0}
+  else{qz.fails=(qz.fails||0)+1;qz.until=(S.admin||cfg.kind==='srs')?0:now()+[60,180,300][Math.min(qz.fails-1,2)]*1000;if(low&&cfg.kind==='lesson')qz.mustRead=1}
+  S.quiz[st.key]=qz;srsUpdate(st);if(cfg.kind==='srs'&&!srsDue().length)S.srsCleared=1;if(cfg.kind==='lesson'&&score===st.qs.length)S.perfect=1;
+  if(ok){
+    if(cfg.kind==='lesson'){S.passed[cfg.id]=1;S.skills[LX[cfg.id].side]=1}
+    else if(cfg.kind==='module'){S.modPassed=S.modPassed||{};S.modPassed[cfg.id]=1}
+    else if(cfg.kind==='review'||cfg.kind==='srs')S.skills.reviser=1;
+    else if(cfg.kind==='exam'&&cfg.id>=S.rank){S.rank=Math.min(7,cfg.id+1);if(cfg.id>=7)S.grandMaster=1;arank=S.rank}
+  }
+  var gained=score*10+(ok&&firstPass?100:0)+(ok&&cfg.kind==='module'?250:0)+(ok&&(cfg.kind==='review'||cfg.kind==='srs')?60:0)+(ok&&cfg.kind==='exam'?500:0);addXP(gained);goalAdd(score,ok&&firstPass?1:0);
+  var missed={};st.qs.forEach(function(q,i){if(!st.ans[i]&&LX[q.lesson]){missed[q.lesson]=(missed[q.lesson]||0)+1}});
+  var html='<div class="row"><span class="eyebrow">'+esc(st.title)+'</span><button class="btn ghost small" data-close="1">Fermer</button></div>';
+  var note20=Math.round(score/st.qs.length*200)/10;
+  html+='<div class="card" style="align-items:center;text-align:center"><div class="big num">'+score+' / '+st.qs.length+'</div><div class="note">soit '+nf1.format(note20)+' / 20 · minimum '+st.need+' · '+Math.round((now()-st.start)/60000)+' min'+(st.timeouts?' · '+st.timeouts+' hors délai':'')+'</div>'+(st.annulled?'<div class="prog down">Test annulé : tu as quitté l’app 3 fois pendant le test.</div>':'')+(prevScore!=null?'<div class="prog '+(score>prevScore?'up':score<prevScore?'down':'')+'">Tentative précédente '+prevScore+' → '+score+' ('+(score>=prevScore?'+':'')+(score-prevScore)+')'+(score>prevScore?' · tu progresses, sur des questions différentes':'')+'</div>':'')+'<h2>'+(ok?(cfg.kind==='exam'?'Rang '+RANKS[S.rank-1]+' obtenu !':'Validé !'):'Pas encore')+'</h2><div class="note">'+(ok?(cfg.kind==='lesson'?'Leçon validée.':cfg.kind==='module'?'Module validé.':(cfg.kind==='review'||cfg.kind==='srs')?'Révision réussie. Les questions ratées reviendront dans ta révision du jour.':'Tu passes au rang '+S.rank+' sur 7.'):(low&&cfg.kind==='lesson'?'Moins de 8/20 : relecture complète de la leçon obligatoire avant de réessayer.':'Il fallait '+st.need+' bonnes réponses. La prochaine tentative changera plus de la moitié des questions et sera plus difficile.'))+'</div></div>';
+  if(ok){html+='<div class="eyebrow">Corrigé détaillé</div>'+st.qs.map(function(q,i){var good=q.opts.filter(function(o){return o.ok})[0];return '<div class="card"><div style="font-weight:600">'+(st.ans[i]?'✓ ':'✗ ')+esc(q.q)+'</div><div class="note"><strong>'+esc(q.multi?'Bonnes réponses : '+q.opts.filter(function(o){return o.ok}).map(function(o){return o.t}).join(' · '):(good?good.t:''))+'</strong> · '+esc(q.explain)+'</div></div>'}).join('')}
+  else{html+='<div class="card"><h3>À retravailler</h3>'+Object.keys(missed).sort(function(a,b){return missed[b]-missed[a]}).map(function(m){return '<div class="miss"><div><b>'+esc(LX[m].title)+'</b> <span class="muted">('+missed[m]+' erreur'+(missed[m]>1?'s':'')+')</span></div><div class="row" style="justify-content:flex-start;gap:8px"><button class="btn small ghost" data-lesson="'+m+'">Revoir la leçon</button>'+(drillLids(m).length?'<button class="btn small ghost" data-drill="'+m+'">S’entraîner</button>':'')+'</div></div>'}).join('')+'<div class="note">Le corrigé ne s’affiche qu’une fois le test réussi : la prochaine tentative aura d’autres questions et d’autres chiffres, donc seule la compréhension paie. Revois la leçon et entraîne-toi sur les calculs avant de retenter.</div></div>'}
+  html+='<button class="btn" data-close="1">Continuer</button>';
+  quizState=null;sheet(html);render();
+}
+
+/* ---------- global clicks ---------- */
+document.addEventListener('click',function(e){
+  var t=e.target.closest('button,[data-go]');if(!t)return;
+  if(t.dataset.go){if(t.dataset.pt)S.ptab=t.dataset.pt;tab=t.dataset.go;closeSheet();render();window.scrollTo(0,0);return}
+  if(t.dataset.lesson){openLesson(t.dataset.lesson);return}
+  if(t.dataset.module){openModule(t.dataset.module);return}
+  if(t.dataset.nq&&!t.disabled){nqStart(t.dataset.nq);return}
+  if(t.dataset.gl){glossPop(t.dataset.gl);return}
+  if(t.dataset.basics){basicsSheet();return}
+  if(t.dataset.ttstest){ttsTest();return}
+  if(t.dataset.drill){drillStart(t.dataset.drill);return}
+  if(t.dataset.srs&&!t.disabled){startQuiz({kind:'srs'});return}
+  if(t.dataset.revmod){startQuiz({kind:'review',id:t.dataset.revmod});return}
+  if(t.dataset.place){startPlacement();return}
+  if(t.dataset.sim){simSheet(t.dataset.sim);return}
+  if(t.dataset.glossary){glossSheet('');return}
+  if(t.dataset.news){openNews(t.dataset.news);return}
+  if(t.dataset.legal){legalSheet(t.dataset.legal);return}
+  if(t.dataset.ncat){ncat=t.dataset.ncat;render();return}
+  if(t.dataset.arank){arank=+t.dataset.arank;render();return}
+  if(t.dataset.review&&!t.disabled){startQuiz({kind:'review'});return}
+  if(t.dataset.modtest){startQuiz({kind:'module',id:t.dataset.modtest});return}
+  if(t.dataset.exam){startQuiz({kind:'exam',id:+t.dataset.exam});return}
+});
+document.addEventListener('change',function(e){if(e.target.id==='ttsSel'){S.ttsVoice=e.target.value;save();ttsTest();return}if(e.target.id==='ttsRate'){S.ttsRate=+e.target.value;save();ttsTest();return}if(e.target.id==='adRank'){S.rank=+e.target.value;save();render();toast('Rang modifié')}if(e.target.id==='adLeague'){S.lg.league=+e.target.value;save();render();toast('Ligue modifiée')}});
+document.addEventListener('input',function(e){if(e.target.id==='ttsRate'){var rv=$('#ttsRateV');if(rv)rv.textContent=nf1.format(+e.target.value)+'×';return}
+});
+setInterval(function(){var cd=$('#cd');if(cd){var id=null;for(var k in S.quiz){if(S.quiz[k].until>now())id=k}if(id){var s=Math.ceil((S.quiz[id].until-now())/1000);cd.textContent=s+' s'}else{var sh=$('.sheet');if(sh)closeSheet();render();toast('Tu peux retenter le quiz')}}},1000);
+
+/* ---------- bienvenue : 3 écrans au premier lancement ---------- */
+var INTRO=[
+ ['m01','Apprends à investir, pour de vrai','Plus de 120 leçons courtes, rangées en 7 rangs, de Novice à Légende : les bases, la Bourse, les ETF, la fiscalité, l’analyse d’entreprise, la macroéconomie.'],
+ ['m09','Valide chaque leçon','Chaque leçon se termine par un quiz chronométré de 20 questions (16 bonnes réponses pour valider). Tes erreurs reviennent dans la révision du jour, jusqu’à ce que tu les maîtrises.'],
+ ['m14','Un petit objectif chaque jour','Valide 1 leçon ou donne 10 bonnes réponses pour garder ta série. Les actus et les défis du jour te tiennent au courant des marchés, et l’onglet Outils t’aide à préparer la certification AMF.']];
+function introShow(i){i=i||0;var x=INTRO[i],last=i===INTRO.length-1;
+  sheet('<div class="sheet-top"><span class="k">Bienvenue · '+(i+1)+' sur '+INTRO.length+'</span><button class="xbtn" data-close="1" aria-label="Fermer">✕</button></div>'+
+   '<div class="intro">'+mico(x[0],'lg')+'<h2 class="title-xl">'+x[1]+'</h2><p>'+x[2]+'</p><div class="dots">'+INTRO.map(function(_,k){return '<i'+(k===i?' class="on"':'')+'></i>'}).join('')+'</div></div>'+
+   (last?'<p class="note">Mindinvest est un outil éducatif : rien ici n’est un conseil en investissement.</p>':'')+
+   '<div class="grid2">'+(i?'<button class="btn ghost" data-intro="'+(i-1)+'">Retour</button>':'<button class="btn ghost" data-close="1">Passer</button>')+'<button class="btn" '+(last?'data-close="1"':'data-intro="'+(i+1)+'"')+'>'+(last?'Commencer':'Suivant')+'</button></div>')}
+document.addEventListener('click',function(e){var t=e.target.closest('[data-intro]');if(t)introShow(+t.dataset.intro)});
+if(!S.intro&&!Object.keys(S.passed||{}).length){S.intro=Date.now();setTimeout(function(){introShow(0)},500)}else if(!S.intro)S.intro=1;
+
+/* ---------- Mindinvest : espace compte (Google, code par e-mail, mot de passe, double sécurité) ---------- */
+function fAcc(){return window.MindCloud&&window.MindCloud.account}
+function lsGet(k){try{return localStorage.getItem(k)}catch(e){return null}}
+function lsSet(k,v){try{if(v==null)localStorage.removeItem(k);else localStorage.setItem(k,v)}catch(e){}}
+var AINFO=null,EMRE=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+function acctInfo(){var A=fAcc();if(!A||!A.info)return Promise.resolve(null);return A.info().then(function(i){AINFO=i;return i}).catch(function(){return null})}
+function fInput(id,label,type,ph,extra){return '<label for="'+id+'">'+label+'</label><input id="'+id+'" type="'+(type||'text')+'"'+(ph?' placeholder="'+ph+'"':'')+(extra||'')+' style="height:48px;border-radius:12px;border:1px solid var(--sep);background:var(--card);color:var(--text);padding:0 12px;font-size:16px">'}
+function fErr(id,m){var e=$('#'+id);if(e){e.textContent=m;e.style.color=m?'var(--down)':''}}
+var GICON='<svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>';
+
+/* carte du compte (onglet Outils) */
+function miAcctBox(){if(ACC.state!=='ok'&&ACC.state!=='sync')return '';var me=ACC.me||{},i=AINFO;
+  if(me.email)return '<div class="note">Compte : '+esc(me.email)+(i&&(i.totp.length||i.emailCode)?' · double sécurité activée':'')+'</div><div class="grid2"><button class="btn small ghost" data-cl="sec">Sécurité</button><button class="btn small ghost" data-facct="out">Se déconnecter</button></div>';
+  return '<div class="note">Crée ton compte ou connecte-toi pour retrouver ta progression, tes rangs et ta ligue sur un autre téléphone.</div><button class="btn small" data-cl="open">Se connecter ou créer un compte</button>'}
+
+/* e-mail + mot de passe */
+function miAcctSheet(kind){var t={new:'Créer mon compte',in:'Se connecter',pw:'Nouveau mot de passe'}[kind];
+  sheet('<div class="sheet-top"><span class="k">'+t+'</span><button class="xbtn" data-close="1" aria-label="Fermer">✕</button></div>'+
+   (kind==='new'?'<p class="note" style="font-size:15px">Ta progression actuelle est gardée et rattachée à ce compte.</p>':kind==='in'?'<p class="note" style="font-size:15px">La progression de ton compte remplacera celle de cet appareil.</p>':'')+
+   '<form id="faForm" class="field">'+(kind!=='pw'?fInput('faMail','E-mail','text','toi@exemple.fr',' inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false"'):'')+
+   fInput('faPw','Mot de passe','password','',' autocomplete="'+(kind==='in'?'current-password':'new-password')+'"')+
+   '<span class="note" id="faErr">'+(kind==='in'?'':'8 caractères minimum')+'</span><button class="btn" type="submit" id="faBtn">'+t+'</button></form>');
+  $('#faForm').addEventListener('submit',function(e){e.preventDefault();var m=$('#faMail')?$('#faMail').value.trim():'',p=$('#faPw').value,er=$('#faErr'),b=$('#faBtn');
+    var bad=function(x){er.textContent=x;er.style.color='var(--down)';b.disabled=false};
+    if(kind!=='pw'&&!EMRE.test(m)){bad('Adresse e-mail invalide.');return}
+    if(kind!=='in'&&p.length<8){bad('Mot de passe : 8 caractères minimum.');return}
+    b.disabled=true;er.textContent='Un instant…';er.style.color='';
+    var A=fAcc(),pr=kind==='new'?A.create(m,p):kind==='in'?A.login(m,p):A.password(p);
+    pr.then(function(){if(kind==='in'){location.reload();return}
+      closeSheet();toast(kind==='new'?'Compte créé : ta progression est rattachée':'Mot de passe modifié');
+      if(kind==='new')window.MindCloud.use('user').then(function(u){return Promise.all([u.me(),u.isOwner()])}).then(function(x){ACC.me=x[0];ACC.owner=!!x[1];S.admin=ACC.owner;render()}).catch(function(){render()})
+    }).catch(function(x){bad((x&&x.message)||'Erreur, réessaie.')})})}
+document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('[data-facct]');if(!b)return;var k=b.dataset.facct;
+  if(k==='out'){if(!confirm('Te déconnecter ? Ta progression reste sur ton compte ; cet appareil repartira de zéro.'))return;
+    fAcc().logout().then(function(){lsSet(KEY,null);lsSet('mi-adopt',null);location.reload()});return}
+  miAcctSheet(k)});
+document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('[data-pseudo]');if(b)onboard(true)});
+
+/* écran de connexion */
+var CL={email:'',step:''};
+function clHome(){sheet('<div class="sheet-top"><span class="k">Mon compte</span><button class="xbtn" data-close="1" aria-label="Fermer">✕</button></div><h2 class="title-xl">Connexion</h2><p class="note" style="font-size:15px">Ta progression actuelle est gardée quand tu crées ton compte.</p>'+
+  '<button class="btn ghost" data-cl="google" style="display:flex;align-items:center;justify-content:center;gap:10px">'+GICON+'Continuer avec Google</button>'+
+  '<button class="btn ghost" data-cl="code">Recevoir un code par e-mail</button>'+
+  '<button class="btn" data-cl="pwin">Se connecter avec mon mot de passe</button>'+
+  '<button class="lnk" data-cl="pwnew" style="align-self:center">Créer un compte avec e-mail et mot de passe</button>'+
+  '<div class="note" id="clErr" aria-live="polite"></div>')}
+function clCode(){var sent=CL.step==='sent';
+  sheet('<div class="sheet-top"><button class="lnk" data-cl="open">‹ Retour</button><button class="xbtn" data-close="1" aria-label="Fermer">✕</button></div><h2 class="title-xl">Code par e-mail</h2>'+
+   '<form id="clCodeForm" class="field">'+fInput('clMail','E-mail','text','toi@exemple.fr',' inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false" value="'+esc(CL.email)+'"'+(sent?' readonly':''))+
+   (sent?fInput('clCode','Code reçu par e-mail','text','123456',' inputmode="numeric" autocomplete="one-time-code" maxlength="8"'):'')+
+   '<span class="note" id="clErr" aria-live="polite">'+(sent?'Regarde ta boîte mail (et les indésirables). Le code est valable une heure.':'Tu reçois un code à 6 chiffres. Pas besoin de mot de passe.')+'</span><button class="btn" type="submit">'+(sent?'Valider le code':'Recevoir le code')+'</button></form>'+
+   (sent?'<button class="lnk" data-cl="code" style="align-self:center">Changer d’e-mail ou renvoyer</button>':''))}
+document.addEventListener('submit',function(e){if(!e.target||e.target.id!=='clCodeForm')return;e.preventDefault();var A=fAcc(),b=e.target.querySelector('button[type=submit]');
+  if(CL.step!=='sent'){var m=($('#clMail').value||'').trim().toLowerCase();if(!EMRE.test(m)){fErr('clErr','Adresse e-mail invalide.');return}b.disabled=true;fErr('clErr','');$('#clErr').textContent='Envoi…';
+    A.sendCode(m,true).then(function(){CL.email=m;CL.step='sent';clCode()}).catch(function(x){b.disabled=false;fErr('clErr',x.message)});return}
+  var c=($('#clCode').value||'').replace(/\s/g,'');if(c.length<6){fErr('clErr','Entre le code à 6 chiffres.');return}b.disabled=true;
+  A.verifyCode(CL.email,c).then(function(u){if(u&&u.id)lsSet('mi-2fa:'+u.id,'1');location.reload()}).catch(function(x){b.disabled=false;fErr('clErr',x.message)})},true);
+
+/* sécurité : appli de codes + code par e-mail */
+var SEC={enroll:null};
+function secOpen(){SEC.enroll=null;sheet('<div class="sheet-top"><span class="k">Sécurité</span><button class="xbtn" data-close="1" aria-label="Fermer">✕</button></div><h2 class="title-xl">Double sécurité</h2><div id="secBody"><div class="note">Chargement…</div></div>');acctInfo().then(secRender)}
+function secRender(){var box=$('#secBody');if(!box)return;var i=AINFO;if(!i){box.innerHTML='<div class="card"><div class="note">Connecte-toi d’abord à ton compte.</div></div>';return}
+  var on=i.totp.length>0,E=SEC.enroll;
+  var totp='<div class="card"><div class="row"><h3>Appli de codes</h3><span class="badge'+(on?' acc':'')+'">'+(on?'Activée':'Désactivée')+'</span></div><div class="note">À chaque connexion sur un nouveau téléphone, Mindinvest demande le code à 6 chiffres affiché par ton appli (Google Authenticator, Microsoft Authenticator, ou « Mots de passe » sur iPhone).</div>'+
+   (E?'<ol class="note" style="margin:0;padding-left:18px;line-height:1.6"><li>Touche « Ajouter à mon appli de codes » (ou scanne le QR code depuis un autre appareil).</li><li>Entre ci-dessous le code à 6 chiffres qui s’affiche.</li></ol>'+
+     (E.uri?'<a class="btn ghost" href="'+esc(E.uri)+'">Ajouter à mon appli de codes</a>':'')+
+     (E.qr?'<div style="background:#fff;border-radius:14px;padding:10px;align-self:center"><img src="'+esc(E.qr)+'" alt="QR code" width="180" height="180" style="display:block"></div>':'')+
+     '<div class="note">Clé à saisir à la main si besoin : <b class="num" style="word-break:break-all">'+esc(E.secret)+'</b></div>'+
+     '<form id="secTotpForm" class="field">'+fInput('secCode','Code à 6 chiffres','text','123456',' inputmode="numeric" autocomplete="one-time-code" maxlength="8"')+'<span class="note" id="secErr"></span><button class="btn" type="submit">Activer</button></form>':
+    (on?'<button class="btn ghost small" data-cl="totpoff">Désactiver l’appli de codes</button>':'<button class="btn small" data-cl="totpon">Activer l’appli de codes</button>'))+'</div>';
+  var mail='<div class="card"><div class="row"><h3>Code par e-mail</h3><span class="badge'+(i.emailCode?' acc':'')+'">'+(i.emailCode?'Activé':'Désactivé')+'</span></div><div class="note">À chaque connexion sur un nouveau téléphone, un code est envoyé à <b>'+esc(i.email)+'</b>.</div>'+
+   '<button class="btn small'+(i.emailCode?' ghost':'')+'" data-cl="'+(i.emailCode?'mailoff':'mailon')+'">'+(i.emailCode?'Désactiver':'Activer')+' le code par e-mail</button></div>';
+  box.innerHTML=totp+mail+'<div class="grp"><button class="lrow" data-facct="pw"><span style="flex:1" class="t">Changer mon mot de passe</span><span class="muted">›</span></button></div>'}
+document.addEventListener('submit',function(e){if(!e.target||e.target.id!=='secTotpForm')return;e.preventDefault();var c=($('#secCode').value||'').replace(/\s/g,'');if(c.length<6){fErr('secErr','Entre le code à 6 chiffres.');return}
+  fAcc().totpCheck(SEC.enroll.id,c).then(function(){SEC.enroll=null;toast('Appli de codes activée');acctInfo().then(function(){secRender();render()})}).catch(function(x){fErr('secErr',x.message)})},true);
+
+/* vérification au démarrage (double sécurité) */
+function gateShow(kind,msg){var g=$('#fgate');if(!g){g=document.createElement('div');g.id='fgate';g.style.cssText='position:fixed;inset:0;z-index:9999;background:var(--bg);color:var(--text);display:flex;align-items:center;justify-content:center;padding:24px;overflow:auto';document.body.appendChild(g)}
+  g.dataset.kind=kind;g.innerHTML='<div style="width:100%;max-width:380px;display:flex;flex-direction:column;gap:14px">'+LOGO+'<h2 class="title-xl">Vérification</h2><div class="note" style="font-size:15px">'+(kind==='totp'?'Entre le code à 6 chiffres affiché par ton appli de codes.':'Un code vient d’être envoyé à <b>'+esc((ACC.me||{}).email||'')+'</b>. Regarde aussi les indésirables.')+'</div>'+
+   '<form id="gateForm" class="field">'+fInput('gateIn','Code','text','123456',' inputmode="numeric" autocomplete="one-time-code" maxlength="8"')+'<span class="note" id="gateErr">'+(msg?esc(msg):'')+'</span><button class="b
