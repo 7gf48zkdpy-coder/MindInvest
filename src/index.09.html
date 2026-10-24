@@ -1,0 +1,110 @@
+t('Les cours se chargent…');return}
+  sheet('<div class="sheet-top"><span class="k">Test de placement</span><button class="xbtn" data-close="1" aria-label="Fermer">✕</button></div><h2 class="title-xl">Trouve ton niveau</h2>'+
+   '<div class="statgrid"><div><small>Questions</small><b class="num">'+qs.length+'</b></div><div><small>Par rang</small><b class="num">6</b></div><div><small>Requis par rang</small><b class="num">5 / 6</b></div><div><small>Essai</small><b class="num">1 seul</b></div></div>'+
+   '<div class="note">Les questions vont du rang 1 au rang 5. Chaque rang réussi à 5 sur 6 au moins, sans trou avant lui, est validé : ses leçons sont marquées comme acquises et tu commences au rang suivant. Quitter en cours compte comme ton unique essai.</div><button class="btn" id="plGo">Commencer</button>');
+  $('#plGo').addEventListener('click',function(){S.placed=now();save();quizState={cfg:{kind:'place'},key:'place',qs:qs,i:0,ans:[],need:0,title:'Test de placement',start:now(),attempt:0};renderQuestion()})}
+function finishPlacement(){var st=quizState,per={},k=0;st.qs.forEach(function(q,i){per[q.prank]=(per[q.prank]||0)+st.ans[i]});
+  for(var r=1;r<=5;r++){if((per[r]||0)>=5)k=r;else break}
+  var score=st.ans.reduce(function(a,b){return a+b},0);S.placeRes={k:k,score:score,per:per};
+  if(k>0){for(var j=1;j<=k;j++){rankLessons(j).forEach(function(id){S.passed[id]=1;if(LX[id])S.skills[LX[id].side]=1});rankMods(j).forEach(function(m){S.modPassed=S.modPassed||{};S.modPassed[m.id]=1})}if(S.rank<k+1){S.rank=k+1;arank=S.rank}}
+  srsUpdate(st);addXP(score*10);goalAdd(score,0);
+  var html='<div class="row"><span class="eyebrow">Test de placement</span><button class="btn ghost small" data-close="1">Fermer</button></div><div class="card" style="align-items:center;text-align:center"><div class="big num">'+score+' / '+st.qs.length+'</div><h2>'+(k?'Tu commences au rang '+(k+1)+' · '+RANKS[k]:'Tu commences au rang 1')+'</h2><div class="note">'+(k?'Les rangs 1 à '+k+' sont validés. Les questions ratées reviendront dans ta révision du jour.':'Pas de souci : le rang 1 pose des bases solides, et tes erreurs reviendront dans ta révision du jour.')+'</div></div>'+
+   '<div class="card">'+[1,2,3,4,5].map(function(r){var v=per[r]||0;return '<div class="row"><span>Rang '+r+' · '+RANKS[r-1]+'</span><span class="num" style="font-weight:700;color:'+(r<=k?'var(--up)':'var(--sec)')+'">'+v+' / 6</span></div>'}).join('')+'</div><button class="btn" data-close="1">Continuer</button>';
+  quizState=null;sheet(html);render()}
+
+/* ---------- glossary ---------- */
+var GKEYS=Object.keys(GLOSS).sort(function(a,b){return b.length-a.length});
+function glossRe(t){var e=t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');var cs=t===t.toUpperCase();return new RegExp('(^|[^\\p{L}\\d])('+e+(cs?'':'s?')+')(?![\\p{L}\\d])','u'+(cs?'':'i'))}
+function glossify(root){if(!root)return;var used={},walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode:function(n){var p=n.parentNode;return p&&p.closest&&!p.closest('button,h2,h3,.gl,figure,.ai,textarea,.tag,small')?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_REJECT}}),nodes=[];
+  while(walker.nextNode())nodes.push(walker.currentNode);
+  nodes.forEach(function(node){var text=node.nodeValue,hit=null;
+    for(var i=0;i<GKEYS.length&&!hit;i++){var t=GKEYS[i];if(used[t])continue;var m=glossRe(t).exec(text);if(m)hit={t:t,idx:m.index+m[1].length,len:m[2].length}}
+    if(!hit)return;used[hit.t]=1;var after=node.splitText(hit.idx);after.nodeValue=after.nodeValue.slice(hit.len);var b=document.createElement('button');b.className='gl';b.dataset.gl=hit.t;b.textContent=text.substr(hit.idx,hit.len);node.parentNode.insertBefore(b,after)})}
+function glossPop(t){var d=GLOSS[t];if(!d)return;var old=$('#glpop');if(old)old.remove();var p=document.createElement('div');p.id='glpop';p.className='glpop';p.setAttribute('role','dialog');p.innerHTML='<div class="row" style="align-items:flex-start"><div style="display:flex;flex-direction:column;gap:4px"><span class="gk">Définition</span><b>'+esc(t)+'</b></div><button class="xbtn" id="glx" aria-label="Fermer">✕</button></div><p>'+esc(d)+'</p><button class="gla" id="gla">Tout le glossaire ›</button>';document.body.appendChild(p);
+  document.querySelectorAll('.gl[aria-expanded="true"]').forEach(function(x){x.setAttribute('aria-expanded','false')});var src=document.querySelector('.gl[data-gl="'+t.replace(/"/g,'')+'"]');if(src)src.setAttribute('aria-expanded','true');
+  var close=function(){p.remove();if(src)src.setAttribute('aria-expanded','false')};$('#glx').addEventListener('click',close);$('#gla').addEventListener('click',function(){close();glossSheet('')})}
+function glossSheet(q){q=q||'';var nq=normTxt(q),list=Object.keys(GLOSS).sort(function(a,b){return a.localeCompare(b,'fr')}).filter(function(t){return !nq||normTxt(t+' '+GLOSS[t]).indexOf(nq)>=0});
+  sheet('<div class="sheet-top"><span class="k">Glossaire · '+Object.keys(GLOSS).length+' termes</span><button class="xbtn" data-close="1" aria-label="Fermer">✕</button></div><h2 class="title-xl">Glossaire</h2><form id="glForm" class="srch">'+ICO.search+'<input type="search" id="glIn" placeholder="Chercher un terme" autocomplete="off" aria-label="Chercher un terme" value="'+esc(q)+'"></form>'+
+   '<div class="grp" id="glList">'+list.map(function(t){return '<div class="lrow" style="flex-direction:column;align-items:flex-start;gap:2px"><span class="t">'+esc(t)+'</span><span class="s">'+esc(GLOSS[t])+'</span></div>'}).join('')+(list.length?'':'<div class="lrow"><span class="s">Aucun terme trouvé.</span></div>')+'</div>');
+  var inp=$('#glIn');inp.addEventListener('input',function(){var v=inp.value;var pos=inp.selectionStart;glossSheet(v);var n=$('#glIn');n.focus();try{n.setSelectionRange(pos,pos)}catch(e){}});$('#glForm').addEventListener('submit',function(e){e.preventDefault()})}
+
+/* ---------- read aloud ---------- */
+var ttsOn=false,ttsKeep=null,ttsRefs=[];
+function ttsStop(){ttsOn=false;clearInterval(ttsKeep);ttsKeep=null;try{window.speechSynthesis&&speechSynthesis.cancel()}catch(e){}ttsRefs=[];var b=$('#ttsBtn');if(b)b.textContent='▶ Écouter'}
+var TTS_F=/amélie|amelie|audrey|aurélie|aurelie|marie|julie|denise|eloise|éloïse|vivienne|céline|celine|hortense|virginie|léa|lea|charlotte|chantal|sylvie|brigitte|caroline|google français|fr-fr-x-frc|fr-fr-x-fra|female|femme/i,TTS_M=/thomas|henri|rémy|remy|nicolas|paul|jacques|daniel|antoine|jean|mathieu|claude|alain|guillaume|yves|fr-fr-x-frd|fr-fr-x-vlf|male|homme/i;
+function ttsGender(x){var n=x.name||'';return TTS_M.test(n)&&!/female/i.test(n)?'m':TTS_F.test(n)?'f':''}
+function ttsScore(x){var n=x.name||'',sc=0;if(/^fr[-_]FR/i.test(x.lang))sc+=2;if(/natural|neural|online/i.test(n))sc+=8;if(/premium|enhanced|amélior|ameliore|plus/i.test(n))sc+=7;if(/google/i.test(n))sc+=5;if(/siri/i.test(n))sc+=6;if(/audrey|aurélie|aurelie|thomas|amélie|amelie|marie|denise|henri|vivienne|remy|eloise|julie/i.test(n))sc+=2;if(/compact|espeak|robot|novelty|grandma|grandpa|eddy|flo|reed|rocko|sandy|shelley/i.test(n))sc-=6;if(!x.localService)sc+=1;return sc}
+function ttsVoices(){try{return (speechSynthesis.getVoices()||[]).filter(function(x){return /^fr/i.test(x.lang)}).sort(function(a,b){return ttsScore(b)-ttsScore(a)})}catch(e){return []}}
+var IS_IOS=/iPhone|iPad|iPod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+var PERSONAS=[
+ {id:'device',n:'Voix du téléphone',g:'',d:'La voix et la langue réglées sur ton téléphone (Siri si l’appareil le permet)',p:1,r:1,slot:0,sys:1},
+ {id:'lea',n:'Léa',g:'f',d:'Douce et posée',p:1.05,r:0.94,slot:0},
+ {id:'camille',n:'Camille',g:'f',d:'Dynamique et souriante',p:1.12,r:1.06,slot:1},
+ {id:'sophie',n:'Sophie',g:'f',d:'Claire, ton de prof',p:0.98,r:0.98,slot:2},
+ {id:'hugo',n:'Hugo',g:'m',d:'Chaleureux et calme',p:0.95,r:0.95,slot:0},
+ {id:'marc',n:'Marc',g:'m',d:'Grave et rassurant',p:0.84,r:0.92,slot:1},
+ {id:'louis',n:'Louis',g:'m',d:'Énergique et direct',p:1.02,r:1.07,slot:2}];
+function ttsPersona(){return PERSONAS[0]}
+function ttsVoice(){return null}
+function ttsSpeak(t){return String(t).replace(/(\d)\s?M€/g,'$1 millions d’euros').replace(/(\d)\s?Md€?/g,'$1 milliards d’euros').replace(/€/g,' euros').replace(/%/g,' pour cent').replace(/×/g,' fois ').replace(/÷/g,' divisé par ').replace(/≈/g,' environ ').replace(/−/g,' moins ').replace(/\^\{?([^}\s]+)\}?/g,' puissance $1 ').replace(/→/g,', donne ').replace(/\bETF\b/g,'E T F').replace(/\bPEA\b/g,'P E A').replace(/\bBCE\b/g,'B C E').replace(/\bPIB\b/g,'P I B').replace(/\s+/g,' ')}
+function ttsCard(){return '<div class="card"><h3>Voix de lecture</h3><div class="note">Les leçons sont lues avec la voix réglée sur ton téléphone. Pour la changer : Réglages › Accessibilité › Lire et énoncer › Voix › Français.</div><button class="btn small ghost" data-ttstest="1">Écouter un exemple</button></div>'}
+function ttsTest(pid){var SS=window.speechSynthesis;if(!SS){toast('Lecture vocale indisponible sur cet appareil');return}try{SS.cancel()}catch(e){}var P=pid?PERSONAS.filter(function(x){return x.id===pid})[0]:ttsPersona();
+  var u=new SpeechSynthesisUtterance((P.sys?'Bonjour, je lis avec la voix de ton téléphone. Je vais lire':'Bonjour, je suis '+P.n+'. Je vais lire')+' tes leçons avec toi. Les intérêts composés, c’est simple : tes intérêts rapportent à leur tour des intérêts.');u.lang='fr-FR';u.rate=1;u.pitch=1;ttsRefs=[u];SS.speak(u)}
+function personaGrid(){var cur=ttsPersona().id;return '<div class="pgrid" role="radiogroup" aria-label="Voix de lecture">'+PERSONAS.map(function(P){return '<button type="button" class="pcard" role="radio" data-persona="'+P.id+'" aria-checked="'+(P.id===cur)+'"><span class="pav '+(P.sys?'sys':P.g)+'">'+(P.sys?'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><rect x="7" y="2" width="10" height="20" rx="3"/><path d="M11 18h2"/></svg>':P.n.charAt(0))+'</span><span class="pn">'+P.n+'</span><span class="pd">'+P.d+'</span><span class="pg">'+(P.sys?'Réglages de l’appareil':P.g==='f'?'Voix féminine':'Voix masculine')+'</span></button>'}).join('')+'</div>'}
+function ttsFail(why){ttsStop();sheetNote('<b>La lecture vocale ne démarre pas sur cet appareil.</b><br>'+why+'<br>Vérifie que ton téléphone n’est pas en mode silencieux (sur iPhone, le bouton sur le côté coupe aussi la voix), monte le volume, puis réessaie. Si ça ne marche toujours pas, ouvre l’app dans Safari ou Chrome : certaines applications bloquent la synthèse vocale.')}
+function sheetNote(html){var n=$('#ttsNote');if(!n){var b=$('#ttsBtn');var host=document.querySelector('.sheet .lesson');if(!host)return toast('Lecture vocale indisponible');n=document.createElement('div');n.id='ttsNote';n.className='ftip';host.parentNode.insertBefore(n,host)}n.innerHTML=html}
+function ttsLesson(l){var SS=window.speechSynthesis;if(!SS||typeof window.SpeechSynthesisUtterance!=='function'){ttsFail('Ton navigateur ne propose pas la synthèse vocale.');return}
+  if(ttsOn){ttsStop();return}
+  var parts=[l.title].concat(l.body,l.keys?['À retenir.'].concat(l.keys):[],l.example?['Exemple. '+l.example]:[],l.deep||[]).map(function(t){return String(t).replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim()}).filter(Boolean);
+  var chunks=[];parts.forEach(function(p){var buf='';(p.match(/[^.!?]+[.!?]*/g)||[p]).forEach(function(s){s=s.trim();if(!s)return;if((buf+' '+s).length>140&&buf){chunks.push(buf);buf=s}else buf=buf?buf+' '+s:s});if(buf)chunks.push(buf)});chunks=chunks.map(ttsSpeak);
+  try{SS.cancel()}catch(e){}
+  var i=0,started=false,voice=ttsVoice();ttsOn=true;ttsRefs=[];var b=$('#ttsBtn');if(b)b.textContent='■ Arrêter';var n0=$('#ttsNote');if(n0)n0.remove();
+  function speakNext(){if(!ttsOn)return;if(i>=chunks.length){ttsStop();return}var u=new SpeechSynthesisUtterance(chunks[i++]);var PP=ttsPersona();u.lang='fr-FR';u.rate=1;u.pitch=PP.p*(/\?\s*$/.test(u.text)?1.06:1);u.volume=1;if(voice){try{u.voice=voice}catch(e){}}
+    u.onstart=function(){started=true};u.onend=function(){if(ttsOn)setTimeout(speakNext,/[.!?]\s*$/.test(u.text)?220:90)};u.onerror=function(e){var c=e&&e.error;if(c==='interrupted'||c==='canceled')return;if(!started)ttsFail('Erreur du lecteur vocal ('+(c||'inconnue')+').');else if(ttsOn)setTimeout(speakNext,30)};
+    ttsRefs.push(u);SS.speak(u)}
+  speakNext();
+  if(!/Android|iPhone|iPad|iPod/i.test(navigator.userAgent))ttsKeep=setInterval(function(){try{if(ttsOn&&SS.speaking&&!SS.paused){SS.pause();SS.resume()}}catch(e){}},12000);
+  setTimeout(function(){if(ttsOn&&!started&&!SS.speaking)ttsFail('Aucun son n’a été produit.')},3000)}
+try{if(window.speechSynthesis){speechSynthesis.getVoices();speechSynthesis.onvoiceschanged=function(){if(tab==='profil'&&!$('#layer').innerHTML)render()}}}catch(e){}
+
+/* ---------- simulators ---------- */
+var SIMS=[['interets','Intérêts composés'],['frais','Effet des frais'],['fisc','PEA, CTO ou assurance-vie'],['credit','Coût d’un crédit']];
+var SIMV={interets:{c:1000,m:200,r:6,y:20},frais:{c:10000,r:7,f1:0.2,f2:1.8,y:30},fisc:{g:10000,couple:0},credit:{k:15000,r:5.5,n:48}};
+function simField(id,k,label,v,step,unit){return '<div class="field"><label for="sf-'+k+'">'+label+'</label><div class="row" style="gap:8px"><input type="number" id="sf-'+k+'" data-sk="'+k+'" value="'+v+'" step="'+step+'" min="0" inputmode="decimal" style="flex:1">'+(unit?'<span class="note" style="min-width:34px">'+unit+'</span>':'')+'</div></div>'}
+function simOut(id){var v=SIMV[id];
+  if(id==='interets'){var r=v.r/100/12,n=v.y*12,fv=v.c*Math.pow(1+r,n)+(r?v.m*(Math.pow(1+r,n)-1)/r:v.m*n),put=v.c+v.m*n;
+    return '<div class="big num">'+eur0(fv)+'</div><div class="note">au bout de '+v.y+' ans</div><div class="alloc" style="height:12px"><i style="flex:'+put+';background:var(--sec)"></i><i style="flex:'+Math.max(0,fv-put)+';background:var(--acc)"></i></div><div class="row note"><span>Tes versements</span><span class="num">'+eur0(put)+'</span></div><div class="row note"><span>Intérêts produits</span><span class="num" style="color:var(--acc);font-weight:700">'+eur0(fv-put)+'</span></div>'}
+  if(id==='frais'){var a=v.c*Math.pow(1+(v.r-v.f1)/100,v.y),b=v.c*Math.pow(1+(v.r-v.f2)/100,v.y);
+    return '<div class="row"><span class="note">Frais '+nf2.format(v.f1)+' %</span><span class="num" style="font-weight:700">'+eur0(a)+'</span></div><div class="row"><span class="note">Frais '+nf2.format(v.f2)+' %</span><span class="num" style="font-weight:700">'+eur0(b)+'</span></div><div class="big num" style="color:var(--down)">−'+eur0(Math.abs(a-b))+'</div><div class="note">C’est ce que coûte l’écart de frais au bout de '+v.y+' ans, soit '+nf0.format(Math.abs(a-b)/Math.max(a,b)*100)+' % du capital final.</div>'}
+  if(id==='fisc'){var g=v.g,ab=v.couple?PRM.avAbC:PRM.avAb,cto=g*(1-PRM.pfu/100),pea=g*(1-PRM.ps/100),av=g-g*PRM.psav/100-Math.max(0,g-ab)*PRM.avTx/100;
+    var rows=[['Compte-titres ('+pc(PRM.pfu)+')',cto],['PEA de plus de 5 ans ('+pc(PRM.ps)+')',pea],['Assurance-vie de plus de 8 ans',av]].sort(function(x,y){return y[1]-x[1]});
+    return rows.map(function(x,i){return '<div class="row"><span class="note"'+(i===0?' style="color:var(--text);font-weight:600"':'')+'>'+x[0]+'</span><span class="num" style="font-weight:700">'+eur0(x[1])+'</span></div>'}).join('')+'<div class="note">Net après impôts en '+PRM.annee+' pour un gain de '+eur0(g)+'. Assurance-vie : abattement de '+eur0(ab)+' sur l’impôt, puis '+pc(PRM.avTx)+' (versements jusqu’à 150 000 €), et '+pc(PRM.psav)+' de prélèvements sociaux sur tout le gain.</div>'}
+  if(id==='credit'){var t=v.r/100/12,n2=Math.max(1,Math.round(v.n)),mens=t?v.k*t/(1-Math.pow(1+t,-n2)):v.k/n2,cost=mens*n2-v.k;
+    return '<div class="big num">'+eur(mens)+'</div><div class="note">par mois pendant '+n2+' mois</div><div class="row note"><span>Coût total des intérêts</span><span class="num" style="color:var(--down);font-weight:700">'+eur0(cost)+'</span></div><div class="row note"><span>Total remboursé</span><span class="num">'+eur0(mens*n2)+'</span></div><div class="note">Hors assurance et frais de dossier.</div>'}}
+function simSheet(id){id=id||'interets';var v=SIMV[id],f='';
+  if(id==='interets')f=simField(id,'c','Capital de départ',v.c,100,'€')+simField(id,'m','Versement mensuel',v.m,10,'€')+simField(id,'r','Rendement annuel',v.r,.5,'%')+simField(id,'y','Durée',v.y,1,'ans');
+  if(id==='frais')f=simField(id,'c','Capital placé',v.c,500,'€')+simField(id,'r','Rendement brut annuel',v.r,.5,'%')+simField(id,'f1','Frais annuels A',v.f1,.05,'%')+simField(id,'f2','Frais annuels B',v.f2,.05,'%')+simField(id,'y','Durée',v.y,1,'ans');
+  if(id==='fisc')f=simField(id,'g','Gain retiré',v.g,500,'€')+'<label class="chk"><input type="checkbox" id="sf-couple"'+(v.couple?' checked':'')+'> <span>Couple soumis à imposition commune</span></label>';
+  if(id==='credit')f=simField(id,'k','Montant emprunté',v.k,500,'€')+simField(id,'r','Taux annuel (TAEG)',v.r,.1,'%')+simField(id,'n','Durée',v.n,6,'mois');
+  sheet('<div class="sheet-top"><span class="k">Simulateurs</span><button class="xbtn" data-close="1" aria-label="Fermer">✕</button></div><h2 class="title-xl">'+SIMS.filter(function(s){return s[0]===id})[0][1]+'</h2>'+
+   '<div class="chips">'+SIMS.map(function(s){return '<button class="chip" data-sim="'+s[0]+'" aria-pressed="'+(s[0]===id)+'">'+s[1]+'</button>'}).join('')+'</div>'+
+   '<div class="card">'+f+'</div><div class="card" id="simOut">'+simOut(id)+'</div><p class="note">Simulation pédagogique avec des hypothèses fixes, pas une promesse de rendement ni un conseil.</p>');
+  document.querySelectorAll('[data-sk]').forEach(function(inp){inp.addEventListener('input',function(){var x=parseFloat(inp.value);if(isFinite(x)&&x>=0){SIMV[id][inp.dataset.sk]=x;$('#simOut').innerHTML=simOut(id)}})});
+  var cp=$('#sf-couple');if(cp)cp.addEventListener('change',function(){SIMV.fisc.couple=cp.checked?1:0;$('#simOut').innerHTML=simOut(id)})}
+var LESSON_SIM={m01l3:'interets',m01l6:'credit',m02l6:'frais',m03l1:'frais',m09l6:'fisc',m09l1:'fisc',m07l5:'interets'};
+
+/* ---------- calculation sheets (formulas + worked examples) ---------- */
+function fmx(s){return esc(s).replace(/\^\{([^}]*)\}/g,'<sup>$1</sup>')}
+function calcHTML(l){if(!l.calc||!l.calc.length)return '';
+  return '<div class="calc"><div class="row"><span class="tag">Les calculs de cette leçon</span><button class="lnk" data-basics="1">Rappels de calcul</button></div>'+(pgFns(l.id).length?'<div class="cta"><span class="dot pm">∞</span><div class="grow"><div style="font-size:17px;font-weight:600">Entraîne-toi sans limite</div><div class="note">De nouveaux chiffres à chaque question, correction étape par étape.'+((S.drill||{})[l.id]?' Notion acquise ✓':'')+'</div></div><button class="btn small" data-drill="'+l.id+'">S’entraîner</button></div>':'')+l.calc.map(function(c){
+    return '<div class="fc"><h3>'+esc(c.t)+'</h3><div class="fx">'+fmx(c.f)+'</div>'+
+     (c.v?'<div class="fv"><span class="note">où :</span>'+c.v.map(function(x){return '<div><b>'+fmx(x[0])+'</b> = '+fmx(x[1])+'</div>'}).join('')+'</div>':'')+
+     (c.ex?'<div class="note" style="font-weight:600;color:var(--text)">Exemple pas à pas</div><ol class="steps">'+c.ex.map(function(x){return '<li>'+fmx(x)+'</li>'}).join('')+'</ol>':'')+
+     (c.tip?'<div class="ftip">'+fmx(c.tip)+'</div>':'')+'</div>'}).join('')+'</div>'}
+var BASICS=[
+ ['Pourcentage → nombre décimal','x % = x ÷ 100','3 % = 0,03 · 20 % = 0,20 · 0,4 % = 0,004'],
+ ['Prendre un pourcentage d’un montant','montant × taux en décimal','20 % de 2 000 € = 2 000 × 0,20 = 400 €'],
+ ['Augmenter ou baisser de x %','hausse : × (1 + x) · baisse : × (1 − x)','+5 % sur 200 € : 200 × 1,05 = 210 € · −30 % : 200 × 0,70 = 140 €'],
+ ['Taux d’évolution','(arrivée − départ) ÷ départ','De 80 € à 100 € : (100 − 80) ÷ 80 = 0,25, soit +25 %'],
+ ['Évolutions successives','on multiplie les coefficients, on n’additionne jamais','+10 % puis −10 % : 1,10 × 0,90 = 0,99, soit −1 %'],
+ ['Une puissance','a^{n} = 
