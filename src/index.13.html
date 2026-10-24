@@ -1,0 +1,119 @@
+unction(t){return 100/Math.pow(1.05,t)})}],
+   note:'À 3 % d’inflation, 100 € ne valent plus qu’environ 41 € de pouvoir d’achat au bout de 30 ans.'})},
+ m01l3:function(){var r=.06/12,it=[10,20,30,40].map(function(n){var v=200*12*n,fv=200*(Math.pow(1+r,12*n)-1)/r;return {label:n+' ans',parts:[v,fv-v]}});
+   return figStack({title:'200 € par mois, placés à 6 % par an',sub:'Ce que tu as versé et ce que les intérêts ont produit',items:it,max:it[3].parts[0]+it[3].parts[1],names:['Tes versements','Intérêts composés'],colors:['var(--sec)','var(--acc)'],fmt:fk,
+   note:'Au bout de 40 ans, tu as versé 96 000 €, mais les intérêts en ont produit plus de 300 000 € : la plus grande partie arrive à la fin.'})},
+ m02l6:function(){var yrs=range(31);return figLine({title:'10 000 € sur 30 ans : l’effet des frais',sub:'Rendement brut de 7 % par an, avant impôts',x:yrs.map(function(y){return y+' ans'}),xt:[0,15,30],fmt:fk,
+   series:[{name:'Frais 0,2 %/an (ETF)',vals:yrs.map(function(t){return 1e4*Math.pow(1.068,t)})},{name:'Frais 1,8 %/an (fonds classique)',vals:yrs.map(function(t){return 1e4*Math.pow(1.052,t)})}],
+   note:'Environ 72 000 € contre 46 000 € : 1,6 point de frais en plus coûte plus du tiers du capital final.'})},
+ m04l2:function(){var ys=range(13).map(function(i){return .01+i*.005});return figLine({title:'Taux monte, prix baisse',sub:'Obligation à 10 ans, coupon de 3 %, prix pour 100 de nominal',x:ys.map(function(y){return nf1.format(y*100)+' %'}),xt:[0,4,8,12],min:60,max:120,fmt:function(v){return nf0.format(v)},
+   series:[{name:'Prix de l’obligation',vals:ys.map(function(y){return bondPrice(3,y,10)}),marks:[4,6]}],
+   note:'Taux du marché en abscisse. À 3 %, l’obligation vaut 100 ; si les taux passent à 4 %, elle tombe vers 92 (soit 919 € pour 1 000 €).'})},
+ m04l4:function(){var ys=range(13).map(function(i){return .01+i*.005});return figLine({title:'Plus l’échéance est longue, plus le prix bouge',sub:'Obligations à coupon de 3 %, prix pour 100 de nominal',x:ys.map(function(y){return nf1.format(y*100)+' %'}),xt:[0,4,8,12],min:40,max:160,fmt:function(v){return nf0.format(v)},
+   series:[{name:'2 ans',vals:ys.map(function(y){return bondPrice(3,y,2)})},{name:'10 ans',vals:ys.map(function(y){return bondPrice(3,y,10)})},{name:'30 ans',vals:ys.map(function(y){return bondPrice(3,y,30)})}],
+   note:'Pour une même variation des taux, l’obligation à 30 ans bouge beaucoup plus que celle à 2 ans : c’est la duration.'})},
+ m07l2:function(){return figStack({title:'Trois profils d’allocation',sub:'Répartition indicative entre actions et obligations ou fonds en euros',items:[{label:'Prudent',parts:[30,70]},{label:'Équilibré',parts:[60,40]},{label:'Dynamique',parts:[85,15]}],max:100,names:['Actions','Obligations / fonds sûrs'],colors:['var(--acc)','var(--sec)'],fmt:function(v){return v+' %'},tfmt:function(p){return p[0]+' / '+p[1]},
+   note:'Plus la part d’actions est élevée, plus le rendement attendu est fort, et plus les baisses temporaires sont profondes.'})},
+ m07l3:function(){var ns=[1,2,3,4,5,6,8,10,12,15,20,25,30,40,50];var s=.35,rho=.2;return figLine({title:'La diversification réduit le risque… jusqu’à un plancher',sub:'Volatilité annuelle d’un portefeuille d’actions selon le nombre de titres (illustration)',x:ns.map(function(n){return n+' titre'+(n>1?'s':'')}),xt:[0,7,14],max:40,fmt:fp,
+   series:[{name:'Volatilité du portefeuille',vals:ns.map(function(n){return 100*Math.sqrt(s*s/n+(1-1/n)*rho*s*s)})}],labels:[[14,100*Math.sqrt(rho)*s,'risque de marché',14,'end']],
+   note:'Le risque propre à chaque entreprise disparaît vite ; le risque du marché, lui, reste. Un ETF monde d’environ 1 400 titres atteint ce plancher d’un coup.'})},
+ m08l7:function(){return figBars({title:'Les grands krachs du S&P 500',sub:'Baisse du plus haut au plus bas',max:60,fmt:function(v){return '−'+nf0.format(Math.abs(v))+' %'},items:[{label:'1987',v:34},{label:'2000-2002',v:49},{label:'2007-2009',v:57},{label:'2020',v:34},{label:'2022',v:25}].map(function(x){x.color='var(--down)';return x}),
+   note:'Chaque fois, l’indice a fini par retrouver puis dépasser son sommet, en quelques mois (2020) ou en plusieurs années (2000, 2008).'})},
+ m09l6:function(){return figBars({title:'Gain de 10 000 € : ce qu’il te reste',sub:'Fiscalité '+PRM.annee+', retrait d’un gain de 10 000 €',max:10000,fmt:function(v){return nf0.format(v)+' €'},items:[{label:'Compte-titres ('+pc(PRM.pfu)+')',v:Math.round(10000*(1-PRM.pfu/100)),color:'var(--sec)'},{label:'PEA de plus de 5 ans ('+pc(PRM.ps)+')',v:Math.round(10000*(1-PRM.ps/100))},{label:'Assurance-vie de plus de 8 ans, gain sous l’abattement ('+pc(PRM.psav)+')',v:Math.round(10000*(1-PRM.psav/100))}],
+   note:'Même placement, même gain : l’enveloppe peut changer de plus de 1 400 € ce que tu gardes.'})},
+ m11l7:function(){var m=['3 mois','1 an','2 ans','5 ans','10 ans','30 ans'];return figLine({title:'Courbe des taux : normale ou inversée',sub:'Taux selon la durée de l’emprunt (exemple)',x:m,xt:[0,2,5],min:0,max:6,fmt:fp,
+   labelStart:1,series:[{name:'Normale',vals:[2,2.3,2.6,3,3.4,3.8],ldy:16},{name:'Inversée',vals:[5.2,5,4.6,4.1,3.9,4.0]}],
+   note:'Normalement, prêter longtemps rapporte plus. Quand les taux courts dépassent les taux longs, la courbe s’inverse : un signal souvent apparu avant les récessions américaines.'})},
+ m11l10:function(){var xs=range(41);return figLine({title:'Le cycle économique',sub:'Activité autour de sa tendance (schéma)',x:xs.map(function(){return ''}),xt:[],min:-1.4,max:1.4,fmt:function(){return ''},
+   series:[{name:'Activité',vals:xs.map(function(i){return Math.sin(i/40*2*Math.PI)})}],labels:[[6,-.45,'Expansion',0,'middle'],[10,1,'Surchauffe',-10,'middle'],[24,.55,'Ralentissement',0,'middle'],[30,-1,'Récession',22,'middle'],[36,.45,'Reprise',0,'middle']],
+   note:'Chaque phase favorise des actifs différents : actions cycliques en reprise, matières premières en surchauffe, obligations et valeurs défensives en récession.'})}
+};
+function lessonHTML(l){
+  var h=l.body.map(function(p){return '<p>'+p+'</p>'}).join('');
+  if(FIGS[l.id]){try{h+=FIGS[l.id]()}catch(e){}}
+  h+=calcHTML(l);
+  if(l.schema){var sc=l.schema,nodes='';sc.nodes.forEach(function(n,i){var lk=sc.links&&sc.links[i]&&!/^[↓→+·]$/.test(sc.links[i].trim())?sc.links[i].replace(/^[↓→]\s*/,''):'';nodes+='<div class="st'+(i===sc.nodes.length-1?' hi':'')+'"><b>'+esc(n[0])+'</b><small>'+esc(n[1])+'</small>'+(lk&&i<sc.nodes.length-1?'<div class="via">'+esc(lk.toLowerCase())+'</div>':'')+'</div>'});
+    h+='<div class="card blk"><h3>'+esc(sc.title)+'</h3><div class="tl">'+nodes+'</div></div>'}
+  if(l.keys)h+='<div class="blk"><h3>À retenir</h3><div class="keys">'+l.keys.map(function(k){return '<div>'+esc(k)+'</div>'}).join('')+'</div></div>';
+  if(l.example)h+='<div class="card blk"><h3>Exemple</h3><p style="margin:0;font-size:16px;line-height:1.5">'+esc(l.example)+'</p></div>';
+  if(l.deep&&l.deep.length)h+='<div class="deep"><span class="tag">Niveau université</span>'+l.deep.map(function(p){return '<p>'+p+'</p>'}).join('')+'</div>';
+  if(l.master)h+='<p class="note" style="font-size:14px">'+esc(l.master)+'</p>';
+  if(l.sources&&l.sources.length)h+='<div class="note">Chiffres vérifiés en octobre 2026 auprès de : '+l.sources.map(function(x){return esc(x[0])}).join(' · ')+'</div>';
+  return h;
+}
+function openLesson(id){
+  if(LEGACY[id])id=LEGACY[id];
+  var l=LX[id];if(!l)return;
+  var m=l.mod,prev=m.lessons[l.ix-1],next=m.lessons[l.ix+1];
+  ttsStop();sheet('<div class="sheet-top"><button class="lnk" data-module="'+m.id+'">‹ '+esc(m.title.length>28?'Module '+m.num:m.title)+'</button><span style="display:flex;gap:8px;align-items:center"><button class="chip" id="ttsBtn">▶ Écouter</button><button class="xbtn" data-close="1" aria-label="Fermer">✕</button></span></div>'+
+   '<div class="lhead">'+mico(m.id,'sm')+'<div class="k">Module '+m.num+' · leçon '+(l.ix+1)+' sur '+m.lessons.length+'</div></div><h2 class="title-xl">'+esc(l.title)+'</h2><div class="pills"><span>'+(l.min||8)+' min</span><span>'+l.quiz.length+' questions</span>'+(S.passed[id]?'<span style="color:var(--up)">Validée</span>':'')+(l.upd?'<span>Mis à jour le '+frDate(l.upd)+'</span>':'')+'</div>'+(l.chg&&recentDays(l.upd)<=60?'<div class="updn"><b>Ce qui a changé</b> '+esc(l.chg)+'</div>':'')+
+   '<div class="lesson" style="display:flex;flex-direction:column;gap:18px">'+lessonHTML(l)+'</div>'+
+   (LESSON_SIM[id]?'<div class="cta"><span class="dot pm">%</span><div class="grow"><div style="font-size:17px;font-weight:600">Fais le calcul toi-même</div><div class="note">Simulateur : '+SIMS.filter(function(x){return x[0]===LESSON_SIM[id]})[0][1]+'</div></div><button class="btn small" data-sim="'+LESSON_SIM[id]+'">Ouvrir</button></div>':'')+
+   '<div class="card"><h3>Pas clair ? Demande à l\'IA</h3><div class="chips"><button class="chip" data-ask="Explique-moi cette leçon plus simplement, comme à un ado de 15 ans.">Plus simple</button><button class="chip" data-ask="Donne-moi un nouvel exemple chiffré, différent de celui de la leçon.">Un autre exemple</button><button class="chip" data-ask="Relie cette leçon à l\'actualité économique récente, en restant prudent sur les chiffres.">Lien avec l\'actualité</button></div>'+
+   '<form id="askForm" class="field"><label for="askIn">Ta question</label><input type="text" id="askIn" placeholder="Pose ta question sur cette leçon" autocomplete="off"></form><div class="ai" id="askOut" hidden></div></div>'+
+   quizEntry(id)+
+   (l.exo?'<div class="card"><div class="eyebrow">Exercice écrit · corrigé par l’IA</div><div>'+esc(l.exo)+'</div><textarea id="exoIn" rows="8" style="width:100%;box-sizing:border-box;border-radius:12px;border:1px solid var(--sep);background:var(--bg);color:var(--text);padding:12px;font:inherit;resize:vertical" placeholder="Rédige ta réponse ici">'+esc(((S.exo||{})[id])||'')+'</textarea><button class="btn" id="exoGo">Faire corriger</button><div class="ai" id="exoOut" hidden></div></div>':'')+
+   '<div class="navrow">'+(prev?'<button data-lesson="'+prev.id+'"><small>‹ Précédente</small><span>'+esc(prev.title)+'</span></button>':'<span></span>')+(next?'<button class="r" data-lesson="'+next.id+'"><small>Suivante ›</small><span>'+esc(next.title)+'</span></button>':'<span></span>')+'</div>');
+  var txt=(l.body.join(' ')+' '+(l.deep||[]).join(' ')+' '+(l.keys||[]).join(' ')+' '+(l.example||'')).replace(/<[^>]+>/g,' ').replace(/\s+/g,' ');
+  var ask=function(q){var o=$('#askOut');o.hidden=false;askAI('Tu es le professeur de l\'application Mindinvest. Réponds en français, simplement, en 6 phrases maximum, sans conseil d\'investissement personnalisé, et sans renvoyer vers des sites ou cours externes. Leçon : « '+l.title+' » (module « '+m.title+' »). Contenu de la leçon : '+txt+' Question de l\'élève : '+q,o,'L\'IA n\'est pas disponible dans cette vue. Dans l\'app, elle répondrait ici à ta question en s\'appuyant sur la leçon.')};
+  $('#askForm').addEventListener('submit',function(e){e.preventDefault();var q=$('#askIn').value.trim();if(q)ask(q)});
+  document.querySelectorAll('[data-ask]').forEach(function(b){b.addEventListener('click',function(){ask(b.dataset.ask)})});
+  bindQuizEntry(id);$('#ttsBtn').addEventListener('click',function(){ttsLesson(l)});try{glossify(document.querySelector('.sheet .lesson'))}catch(e){}
+  if(l.exo){var ei=$('#exoIn');ei.addEventListener('input',function(){S.exo=S.exo||{};S.exo[id]=ei.value;save()});
+    $('#exoGo').addEventListener('click',function(){if(!isPremium()){paywall('La correction des exercices écrits fait partie de l’offre Premium.');return}var t=ei.value.trim(),o=$('#exoOut');o.hidden=false;if(t.length<200){o.textContent='Ta réponse est trop courte pour être corrigée : développe-la (au moins 200 caractères).';return}
+      askAI('Tu es un professeur exigeant de finance de niveau universitaire, pour l’application Mindinvest. Corrige en français la réponse d’un élève à cet exercice : « '+l.exo+' ». Contexte de la leçon : '+txt.slice(0,1500)+' Évalue selon 5 critères notés chacun sur 4 (compréhension, chiffres et exactitude, risques et nuances, raisonnement, clarté), donne une note totale sur 20, puis 3 points forts, 3 points à améliorer et une version modèle courte. Signale toute erreur factuelle. Ne donne aucun conseil d’investissement personnalisé. Réponse de l’élève : '+t,o,'L’IA n’est pas disponible dans cette vue. Dans l’app, elle corrigerait ici ta réponse sur 20 selon cinq critères.')})}
+  var sh=document.querySelector('.sheet');if(sh)sh.scrollTop=0;
+}
+function attemptsOf(key){return (S.quiz[key]||{}).n||0}
+function quizEntry(id){
+  var qz=S.quiz[id]||{},best=qz.best||0,pass=S.passed[id];
+  var r=ring(pass?1:best/20,56,6,'<span style="font-size:13px">'+(pass?'✓':best?best:'20')+'</span>',pass?'var(--up)':null);
+  var msg=(!S.admin&&qz.mustRead)?'Sous 8/20 : relis la leçon jusqu’en bas pour débloquer le quiz.':(!S.admin&&qz.until&&qz.until>now())?'Prochaine tentative dans <strong id="cd">'+Math.ceil((qz.until-now())/1000)+' s</strong>.':'20 questions chronométrées · 16 requises'+(qz.n?' · '+qz.n+' tentative'+(qz.n>1?'s':''):'');
+  var can=S.admin||!((qz.mustRead)||(qz.until&&qz.until>now()));
+  return '<div class="cta">'+r+'<div class="grow"><div style="font-size:17px;font-weight:600;letter-spacing:-.015em">'+(pass?'Quiz validé':'Valider la leçon')+'</div><div class="note">'+msg+'</div></div>'+(can?'<button class="btn small'+(pass?' ghost':'')+'" data-startquiz="'+id+'">'+(pass?'Refaire':'Commencer')+'</button>':'')+'</div>';
+}
+function bindQuizEntry(id){
+  var b=document.querySelector('[data-startquiz]');if(b)b.addEventListener('click',function(){startQuiz({kind:'lesson',id:id})});
+  var qz=S.quiz[id];
+  if(qz&&qz.mustRead&&!S.admin){var sh=document.querySelector('.sheet');if(sh)sh.addEventListener('scroll',function onS(){if(sh.scrollTop+sh.clientHeight>=sh.scrollHeight-40){qz.mustRead=0;save();sh.removeEventListener('scroll',onS);toast('Leçon relue : quiz débloqué');openLesson(id)}})}
+}
+var quizState=null,qTimer=null;
+function startQuiz(cfg){
+  var key=cfg.kind==='lesson'?cfg.id:cfg.kind==='module'?'mod:'+cfg.id:cfg.kind==='exam'?'exam:'+cfg.id:cfg.kind==='srs'?'srs':'review';
+  var qz=S.quiz[key]||{},attempt=qz.n||0;
+  var qs=buildTest(cfg.kind,cfg.id,attempt,qz.sigs||[]);if(!qs.length){toast('Rien à réviser pour l’instant');return}
+  var title=cfg.kind==='lesson'?LX[cfg.id].title:cfg.kind==='exam'?'Examen · passer '+RANKS[Math.min(6,cfg.id)]:testName(cfg.kind,cfg.id);
+  var newN=qs.filter(function(q){return (qz.sigs||[]).indexOf(q.sig)<0}).length;
+  quizState={cfg:cfg,key:key,qs:qs,i:0,ans:[],need:Math.ceil(qs.length*0.8),title:title,start:now(),attempt:attempt};
+  var tot=qs.reduce(function(a,q){return a+QTIME[q.d||1]},0);
+  sheet('<div class="sheet-top"><span class="k">'+esc(testName(cfg.kind,cfg.id))+'</span><button class="xbtn" data-close="1" aria-label="Annuler">✕</button></div><h2 class="title-xl">'+esc(title)+'</h2>'+
+    '<div class="statgrid"><div><small>Questions</small><b class="num">'+qs.length+'</b></div><div><small>Pour valider</small><b class="num">'+quizState.need+'</b></div><div><small>Durée maximale</small><b class="num">'+Math.round(tot/60)+' min</b></div><div><small>Tentative</small><b class="num">'+(attempt+1)+'</b>'+(attempt?'<small style="margin-top:2px">'+newN+' nouvelles questions</small>':'')+'</div></div>'+
+    '<div class="note">Chrono par question : 30 s facile, 50 s moyenne, 60 s difficile. Temps écoulé = réponse fausse. Environ une question sur cinq a plusieurs bonnes réponses : il faut toutes les cocher, sans en cocher de fausse. Pas de retour en arrière ni de correction pendant le test. Quitter l’app (pour chercher une réponse, par exemple) compte la question comme fausse, et 3 sorties annulent le test. Le copier-coller des questions est désactivé.'+(attempt?' Cette tentative contient davantage de questions difficiles.':'')+'</div>'+
+    '<button class="btn" id="goQ">Commencer</button>');
+  $('#goQ').addEventListener('click',renderQuestion);
+}
+/* ---------- anti-cheat during timed tests ---------- */
+document.addEventListener('visibilitychange',function(){var st=quizState;if(!st||!document.getElementById('nextQ'))return;
+  if(document.hidden){st.leftAt=now()}else if(st.leftAt){st.leftAt=0;st.leaves=(st.leaves||0)+1;cheatReturn(st)}});
+function cheatReturn(st){stopTimer();
+  if(st.leaves>=3){while(st.ans.length<st.qs.length)st.ans.push(0);st.i=st.qs.length;st.annulled=1;finishQuiz();return}
+  st.ans.push(0);st.i++;st.timeouts=(st.timeouts||0)+1;if(st.i<st.qs.length){renderQuestion();var w=document.createElement('div');w.className='cheatw';w.setAttribute('role','alert');w.innerHTML='<b>Tu as quitté l’app pendant le test.</b> La question en cours est comptée fausse ('+st.leaves+'/3). À la 3e sortie, le test est annulé.';var sh=document.querySelector('.sheet .q-meta');if(sh)sh.parentNode.insertBefore(w,sh)}else finishQuiz()}
+['copy','cut','contextmenu','selectstart','dragstart'].forEach(function(ev){document.addEventListener(ev,function(e){if(quizState&&document.getElementById('nextQ')&&e.target.closest&&e.target.closest('.sheet')){e.preventDefault()}})});
+function stopTimer(){if(qTimer){clearInterval(qTimer);qTimer=null}}
+function renderQuestion(){
+  stopTimer();
+  var st=quizState;if(!st)return;var q=st.qs[st.i],lim=QTIME[q.d||1],end=now()+lim*1000;
+  var lvl=['','Facile','Moyenne','Difficile'][q.d||1];
+  sheet('<div class="q-top"><button class="xbtn" data-close="1" aria-label="Quitter">✕</button><div class="bar"><i style="width:'+(st.i/st.qs.length*100)+'%"></i></div><span id="qtr">'+ring(1,40,4,'<span id="qt" class="num" style="font-size:12px">'+lim+'</span>')+'</span></div>'+
+   '<div class="q-meta"><span>Question '+(st.i+1)+' sur '+st.qs.length+'</span><span>'+(q.cat?esc(q.cat)+' · ':'')+lvl+'</span></div>'+
+   (q.multi?'<div class="mxnote">Plusieurs réponses possibles · coche toutes les bonnes</div>':'')+'<h2 class="q-title">'+esc(q.q)+'</h2><div style="display:flex;flex-direction:column;gap:10px" role="group" aria-label="Réponses">'+q.opts.map(function(o,i){return '<button class="opt'+(q.multi?' multi':'')+'" data-opt="'+i+'" aria-pressed="false"><span class="lt">'+'ABCD'[i]+'</span>'+(o.s?'<span class="mxo"><small>'+esc(o.s)+'</small><b>'+esc(o.v)+'</b></span>':'<span>'+esc(o.t)+'</span>')+'</button>'}).join('')+'</div>'+
+   '<button class="btn" id="nextQ" disabled>'+(st.i+1<st.qs.length?'Valider et continuer':'Terminer')+'</button>');
+  var sel=-1,msel={};
+  function next(timeout){stopTimer();var good=q.multi?(!timeout&&q.opts.every(function(o,k){return !!msel[k]===!!o.ok})):(!timeout&&sel>=0&&q.opts[sel].ok);st.ans.push(good?1:0);if(timeout)st.timeouts=(st.timeouts||0)+1;st.i++;if(st.i<st.qs.length)renderQuestion();else finishQuiz()}
+  document.querySelectorAll('[data-opt]').forEach(function(b){b.addEventListener('click',function(e){if(q.multi){var k=+b.dataset.opt;msel[k]=!msel[k];b.setAttribute('aria-pressed',String(!!msel[k]));$('#nextQ').disabled=!Object.keys(msel).some(function(z){return msel[z]});return}sel=+b.dataset.opt;document.querySelectorAll('[data-opt]').forEach(function(x){x.setAttribute('aria-pressed',String(x===b))});$('#nextQ').disabled=false})});
+  $('#nextQ').addEventListener('click',function(){next(false)});
+  qTimer=setInterval(function(){if(!quizState||quizState!==st){stopTimer();return}var r=Math.max(0,Math.ceil((end-now())/1000)),t=$('#qt'),arc=document.querySelector('#qtr .arc');if(t){t.textContent=r;t.style.color=r<=10?'var(--down)':''}if(arc){var C=parseFloat(arc.getAttribute('stroke-dasharray'));arc.style.strokeDashoffset=(C*(1-(end-now())/(lim*1000))).toFixed(2);arc.style.stroke=r<=10?'var(--down)':''}if(r<=0){toast('Temps écoulé');next(true)}},250);
+}
+function finishQuiz(){
+  stopTimer();if(quizState&&(quizState.cfg.kind==='flash'||quizState.cfg.kind==='weekly'))return finishNewsQuiz();if(quizState&&quizState.cfg.kind==='place')return finishPlacement();
+  var st=quizState,cfg=st.cfg,score=st.ans.reduce(function(a,b){return a+b},0),o
