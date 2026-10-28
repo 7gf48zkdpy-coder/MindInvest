@@ -12,3 +12,5 @@
   Cache-Control: no-cache
 /parametres.json
   Cache-Control: no-cache
+/acces.js
+  Cache-Control: no-cache
