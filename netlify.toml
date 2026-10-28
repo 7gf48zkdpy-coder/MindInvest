@@ -1,7 +1,7 @@
 [build]
   publish = "."
   # Remet bout à bout les morceaux de src/ et crée les icônes (voir build.js)
-  command = "node build.js && node build-acces.js"
+  command = "node build.js && node build-premium.js && node build-acces.js"
 
 [build.environment]
   # La clé Supabase de cloud.js est publique (publishable) : ce n'est pas un secret
