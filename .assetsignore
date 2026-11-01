@@ -1,0 +1,12 @@
+# Fichiers du dépôt qui ne doivent pas être publiés sur Cloudflare
+.git
+.gitignore
+.netlify
+.wrangler
+node_modules
+src
+supabase
+*.md
+build*.js
+netlify.toml
+wrangler.jsonc
